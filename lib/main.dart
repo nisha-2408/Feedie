@@ -33,16 +33,17 @@ class _MyAppState extends State<MyApp> {
             fontSize: 15,
           ),
           caption: TextStyle(
-            color: Colors.blue,
+            color: Colors.orange,
             fontWeight: FontWeight.w900,
             fontSize: 32
           ),
           bodyText2: TextStyle(
-            color: Colors.blue,
+            color: Colors.orange,
             fontSize: 12,
             fontWeight: FontWeight.bold
           )
-        )
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: Colors.orange))
       ),
       initialRoute: '/login',
       routes: {

@@ -2,14 +2,23 @@
 
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final nameController = TextEditingController();
+
   final contactController = TextEditingController();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
+  bool terms = false;
 
   void loadLogin(BuildContext ctx) {
     Navigator.of(ctx).pushNamed('/login');
@@ -100,6 +109,24 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             controller: passwordController,
+          ),
+          Row(
+            children: [
+              Checkbox(
+                  value: terms,
+                  onChanged: (value) {
+                    setState(() {
+                      terms = value!;
+                    });
+                  },
+                  activeColor: Theme.of(context).primaryColor,
+                  checkColor: Theme.of(context).primaryColor,
+                ),
+                Text('I agree to the ', style:TextStyle(color: Colors.grey)),
+                Text("Terms of Services ", style: TextStyle(color: Colors.orange)),
+                Text("and ", style:TextStyle(color: Colors.grey)),
+                Flexible(child: Text("Privacy Policy ", style: TextStyle(color: Colors.orange))),
+            ],
           ),
           SizedBox(
             height: 25,

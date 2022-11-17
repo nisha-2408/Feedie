@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, avoid_web_libraries_in_flutter
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, avoid_web_libraries_in_flutter, avoid_print
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +17,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   void submitData() {
+    // ignore: unnecessary_null_comparison
     if (emailController.text == null && passwordController.text == null) {
       return;
     }
