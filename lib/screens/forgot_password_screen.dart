@@ -1,20 +1,31 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, must_be_immutable, unused_field, body_might_complete_normally_nullable
 
 import 'package:flutter/material.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
   ForgotPassword({super.key});
 
-  final confirmController = TextEditingController();
-  final passwordController = TextEditingController();
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+  var notShowPass = true;
+
+  String password = "";
+
+  String confirmPassword = "";
+
+  final _form = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
-            child: Column(
+        body: SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+        child: Form(
+          child: Column(
               //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Align(
@@ -30,8 +41,28 @@ class ForgotPassword extends StatelessWidget {
                 SizedBox(
                   height: 35,
                 ),
-                TextField(
+                TextFormField(
+                  obscureText: notShowPass,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(notShowPass
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          notShowPass = !notShowPass;
+                        });
+                      },
+                      style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.primary)),
+                    ),
+                    errorStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 8.0,
+                    ),
                     hintStyle: Theme.of(context).textTheme.bodyText1,
                     hintText: 'Password',
                     filled: true,
@@ -42,13 +73,43 @@ class ForgotPassword extends StatelessWidget {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  controller: passwordController,
+                  textInputAction: TextInputAction.next,
+                  validator: ((value) {
+                    if (value == null ||
+                        value.length < 8 ||
+                        value.length > 12) {
+                      return "Password must contain 8-12 characters!";
+                    }
+                  }),
+                  onSaved: ((newValue) {
+                    password = newValue!;
+                  }),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                TextField(
+                TextFormField(
+                  obscureText: notShowPass,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(notShowPass
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          notShowPass = !notShowPass;
+                        });
+                      },
+                      style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.primary)),
+                    ),
+                    errorStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 8.0,
+                    ),
                     hintStyle: Theme.of(context).textTheme.bodyText1,
                     hintText: 'Confirm Password',
                     filled: true,
@@ -59,7 +120,16 @@ class ForgotPassword extends StatelessWidget {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  controller: confirmController,
+                  validator: ((value) {
+                    if (value == null ||
+                        value.length < 8 ||
+                        value.length > 12) {
+                      return "Password must contain 8-12 characters!";
+                    }
+                  }),
+                  onSaved: ((newValue) {
+                    confirmPassword = newValue!;
+                  }),
                 ),
                 SizedBox(
                   height: 5,
@@ -83,10 +153,9 @@ class ForgotPassword extends StatelessWidget {
                         style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                       )),
                 ),
-              ]
+              ]),
         ),
-          ),
-      )
-    );
+      ),
+    ));
   }
 }

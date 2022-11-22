@@ -23,36 +23,32 @@ class _MyAppState extends State<MyApp> {
       title: 'Feedie',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        colorScheme: ThemeData().colorScheme.copyWith(secondary: Colors.blue),
-        fontFamily: 'Poppins',
-        textTheme: ThemeData.light().textTheme.copyWith(
-          bodyText1: TextStyle(
-            color: Color.fromARGB(221, 138, 137, 137),
-            fontWeight: FontWeight.w500,
-            fontSize: 15,
-          ),
-          caption: TextStyle(
-            color: Colors.orange,
-            fontWeight: FontWeight.w900,
-            fontSize: 32
-          ),
-          bodyText2: TextStyle(
-            color: Colors.orange,
-            fontSize: 12,
-            fontWeight: FontWeight.bold
-          )
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(style: ElevatedButton.styleFrom(primary: Colors.orange))
-      ),
+          colorScheme: ThemeData()
+              .colorScheme
+              .copyWith(primary: Colors.orange, secondary: Colors.blue),
+          fontFamily: 'Poppins',
+          textTheme: ThemeData.light().textTheme.copyWith(
+              bodyText1: TextStyle(
+                color: Color.fromARGB(221, 138, 137, 137),
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
+              caption: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 32),
+              bodyText2: TextStyle(
+                  color: Colors.orange,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange))),
       initialRoute: '/login',
       routes: {
-        '/login':(context) => LoginScreen(),
-        '/signup':(context) => SignUpScreen(),
-        '/forgot_password':(context) => ForgotPassword()
+        '/login': (context) => LoginScreen(),
+        '/signup': (context) => SignUpScreen(),
+        '/forgot_password': (context) => ForgotPassword()
       },
     );
   }
 }
-
-
