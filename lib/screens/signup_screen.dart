@@ -1,6 +1,9 @@
-// ignore_for_file: unused_import, implementation_imports, prefer_const_constructors, duplicate_ignore, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, body_might_complete_normally_nullable, unnecessary_null_comparison, avoid_print
+// ignore_for_file: unused_import, implementation_imports, prefer_const_constructors, duplicate_ignore, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, body_might_complete_normally_nullable, unnecessary_null_comparison, avoid_print, use_build_context_synchronously
 
+import 'package:feedie/models/http_exception.dart';
+import 'package:feedie/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -16,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String contact = "";
   String email = "";
   String password = "";
+  var isError = false;
   final _form = GlobalKey<FormState>();
 
   bool terms = false;
@@ -24,16 +28,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.of(ctx).pushNamed('/login');
   }
 
-  void saveForm() {
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> saveForm() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
-    print(name);
-    print(contact);
-    print(email);
-    print(password);
+    try {
+      await Provider.of<Auth>(context, listen: false)
+          .signUp(email, password, name, contact);
+    } on HttpException catch (error) {
+      isError = true;
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This is not a valid email address';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'This password is too weak.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      isError = true;
+      const errorMessage =
+          "Could not authenticate you. Please try again later.";
+      _showErrorDialog(errorMessage);
+    }
+    _form.currentState!.reset();
+    if (!isError) {
+      Navigator.pushNamed(context, '/home');
+    }
+    //Navigator.pushNamed(context, '/home');
   }
 
   @override
@@ -153,7 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               height: 15,
             ),
             TextFormField(
-              obscureText: true,
+              obscureText: notShowPass,
               enableSuggestions: false,
               autocorrect: false,
               decoration: InputDecoration(

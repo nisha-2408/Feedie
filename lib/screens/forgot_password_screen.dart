@@ -11,6 +11,7 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   var notShowPass = true;
+  var notShowCPass = true;
 
   String password = "";
 
@@ -89,17 +90,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   height: 15,
                 ),
                 TextFormField(
-                  obscureText: notShowPass,
+                  obscureText: notShowCPass,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
-                      icon: Icon(notShowPass
+                      icon: Icon(notShowCPass
                           ? Icons.visibility
                           : Icons.visibility_off),
                       onPressed: () {
                         setState(() {
-                          notShowPass = !notShowPass;
+                          notShowCPass = !notShowCPass;
                         });
                       },
                       style: ButtonStyle(

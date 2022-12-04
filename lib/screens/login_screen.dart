@@ -1,6 +1,9 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, avoid_web_libraries_in_flutter, avoid_print, must_be_immutable, unnecessary_null_comparison, duplicate_ignore, body_might_complete_normally_nullable, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import, avoid_web_libraries_in_flutter, avoid_print, must_be_immutable, unnecessary_null_comparison, duplicate_ignore, body_might_complete_normally_nullable, prefer_const_constructors_in_immutables, use_build_context_synchronously
 
+import 'package:feedie/models/http_exception.dart';
+import 'package:feedie/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,16 +29,48 @@ class _LoginScreenState extends State<LoginScreen> {
   void loadForgotPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forgot_password');
   }
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
 
-  void submitData() {
+  void submitData() async {
     // ignore: unnecessary_null_comparison
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
-    print(email);
-    print(password);
+    try{
+      await Provider.of<Auth>(context, listen: false).signIn(email, password);
+    } on HttpException catch(error){
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find a user with that email.';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid password.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage =
+          "Could not authenticate you. Please try again later.";
+      _showErrorDialog(errorMessage);
+    }
+    _form.currentState!.reset();
+    //Navigator.pushNamed(context, '/home');
   }
 
   @override
@@ -107,10 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                       style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.primary
-                        )
-                      ),
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.primary)),
                     ),
                     errorStyle: TextStyle(
                       fontWeight: FontWeight.normal,
