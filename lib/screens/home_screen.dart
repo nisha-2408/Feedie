@@ -25,11 +25,11 @@ class _HomeState extends State<Home> {
     if (isInit) {
       isLoading = true;
       //print(isLoading);
-      Provider.of<UserData>(context).fetchUserData().then((value) {
-        setState(() {
-          isLoading = false;
+        Provider.of<UserData>(context).fetchUserData().then((value) {
+          setState(() {
+            isLoading = false;
+          });
         });
-      });
     }
     isInit = false;
     super.didChangeDependencies();

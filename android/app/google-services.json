@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "342076924780",
+    "firebase_url": "https://feedie-39c3c-default-rtdb.firebaseio.com",
+    "project_id": "feedie-39c3c",
+    "storage_bucket": "feedie-39c3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342076924780:android:9e28e0a6d4262536250949",
+        "android_client_info": {
+          "package_name": "com.example.feedie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342076924780-a6kf5aa359fv493ljtdsmapb50r73lij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAvN1SCqiNHxWAOPhqvIkACsj-xSVwMQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342076924780-a6kf5aa359fv493ljtdsmapb50r73lij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

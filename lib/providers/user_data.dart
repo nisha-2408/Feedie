@@ -16,6 +16,7 @@ class UserData with ChangeNotifier {
   String imageUrl = "";
   String contact = "";
   Future<void> fetchUserData() async {
+    print("hi $token");
     final uri =
         "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
     final response = await http.get(Uri.parse(uri));

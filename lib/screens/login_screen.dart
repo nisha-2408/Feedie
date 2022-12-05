@@ -30,6 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).pushNamed('/forgot_password');
   }
 
+  void googleLogin() async {
+    await Provider.of<Auth>(context, listen: false).googleLogin();
+  }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -222,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ))),
-                      onPressed: () {},
+                      onPressed: googleLogin,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
