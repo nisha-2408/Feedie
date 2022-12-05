@@ -64,16 +64,18 @@ class Auth with ChangeNotifier {
     _userId = response.user!.uid;
     //print(_userId);
     _expiryDate = DateTime.now().add(Duration(seconds: 3600));
-    final uri =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$_token";
-    final res = await http.post(Uri.parse(uri),
-        body: json.encode({
-          'name': response.user!.displayName,
-          'email': response.user!.email,
-          'contact': response.user!.phoneNumber,
-          'imageUrl': response.user!.photoURL,
-          'userId': response.user!.uid
-        }));
+    if (response.additionalUserInfo!.isNewUser) {
+      final uri =
+          "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$_token";
+      final res = await http.post(Uri.parse(uri),
+          body: json.encode({
+            'name': response.user!.displayName,
+            'email': response.user!.email,
+            'contact': response.user!.phoneNumber,
+            'imageUrl': response.user!.photoURL,
+            'userId': response.user!.uid
+          }));
+    }
     //print(json.decode(res.body));
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
@@ -200,7 +202,7 @@ class Auth with ChangeNotifier {
     _expiryDate = expires;
     notifyListeners();
     autoLogout();
-    print("exiting autologin");
+    //print("exiting autologin");
     return true;
   }
 

@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool terms = false;
 
   void loadLogin(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed('/login');
+    Navigator.of(context).pop();
   }
 
   void _showErrorDialog(String message) {
@@ -74,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     _form.currentState!.reset();
     if (!isError) {
-      Navigator.pushNamed(context, '/home');
+      Navigator.of(context).pop();
     }
     //Navigator.pushNamed(context, '/home');
   }
@@ -268,9 +268,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
                   ))),
-                  onPressed: () {
-                    saveForm();
-                  },
+                  onPressed: !terms
+                      ? null
+                      : () {
+                          saveForm();
+                        },
                   child: Text(
                     "Create Account",
                     style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
