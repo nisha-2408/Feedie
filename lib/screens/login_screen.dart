@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void loadForgotPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forgot_password');
   }
+
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -54,9 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     _form.currentState!.save();
-    try{
+    try {
       await Provider.of<Auth>(context, listen: false).signIn(email, password);
-    } on HttpException catch(error){
+    } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = 'Could not find a user with that email.';
@@ -65,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
+      print(error);
       const errorMessage =
           "Could not authenticate you. Please try again later.";
       _showErrorDialog(errorMessage);

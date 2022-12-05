@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, avoid_print
+
 import 'dart:convert';
 
 import 'package:feedie/providers/auth.dart';
@@ -5,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserData with ChangeNotifier {
-  String token;
-  String userId;
+  String? token;
+  String? userId;
   UserData({required this.token, required this.userId});
 
   String name = "";
@@ -19,7 +21,7 @@ class UserData with ChangeNotifier {
     final response = await http.get(Uri.parse(uri));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     extractedData.forEach(((key, value) => name = value['name']));
-    print(extractedData);
+    //print(extractedData);
     notifyListeners();
   }
 }

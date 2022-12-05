@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports
+// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports, no_leading_underscores_for_local_identifiers
 
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final _userData = Provider.of<UserData>(context);
+    final _userData = Provider.of<UserData>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text("Feedie"),
@@ -47,7 +47,16 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Center(child: Text(_userData.name)),
+          : Column(
+              children: [
+                Center(child: Text(_userData.name)),
+                TextButton(
+                    onPressed: () {
+                      Provider.of<Auth>(context, listen: false).logOut();
+                    },
+                    child: Text("LogOut"))
+              ],
+            ),
     );
   }
 }
