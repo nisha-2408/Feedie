@@ -67,11 +67,17 @@ class Auth with ChangeNotifier {
     if (response.additionalUserInfo!.isNewUser) {
       final uri =
           "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$_token";
+      final no;
+      if (response.user!.phoneNumber == null) {
+        no = "";
+      } else {
+        no = response.user!.phoneNumber;
+      }
       final res = await http.post(Uri.parse(uri),
           body: json.encode({
             'name': response.user!.displayName,
             'email': response.user!.email,
-            'contact': response.user!.phoneNumber,
+            'contact': no,
             'imageUrl': response.user!.photoURL,
             'userId': response.user!.uid
           }));

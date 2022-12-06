@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, must_be_immutable, unused_field, body_might_complete_normally_nullable
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 
 class ForgotPassword extends StatefulWidget {
   ForgotPassword({super.key});
@@ -11,22 +13,59 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   var notShowPass = true;
-  var notShowCPass = true;
+
+  String email = "";
 
   String password = "";
 
-  String confirmPassword = "";
-
   final _form = GlobalKey<FormState>();
+
+  void _showErrorDialog(String message, bool isSuccess) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: isSuccess ? Text("Success!") : Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future submitData() async {
+    // ignore: unnecessary_null_comparison
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _form.currentState!.save();
+    try {
+      final response =
+          await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      _showErrorDialog(
+          "Password reset email has been sent your registered mail!! After resetting the password please login", true);
+    } catch (error) {
+      _showErrorDialog("No user with $email was found!!", false);
+    }
+    _form.currentState!.reset();
+    //Navigator.pushNamed(context, '/home');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
-        child: Form(
-          child: Column(
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+          child: Form(
+            key: _form,
+            child: Column(
               //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Align(
@@ -43,29 +82,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   height: 35,
                 ),
                 TextFormField(
-                  obscureText: notShowPass,
-                  enableSuggestions: false,
-                  autocorrect: false,
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(notShowPass
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          notShowPass = !notShowPass;
-                        });
-                      },
-                      style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.primary)),
-                    ),
                     errorStyle: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 8.0,
                     ),
                     hintStyle: Theme.of(context).textTheme.bodyText1,
-                    hintText: 'Password',
+                    hintText: 'Email',
                     filled: true,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
@@ -76,67 +99,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   ),
                   textInputAction: TextInputAction.next,
                   validator: ((value) {
-                    if (value == null ||
-                        value.length < 8 ||
-                        value.length > 12) {
-                      return "Password must contain 8-12 characters!";
+                    if (!validator.email(value!) || value == null) {
+                      return "Please enter a valid email!";
                     }
+                    return null;
                   }),
                   onSaved: ((newValue) {
-                    password = newValue!;
+                    email = newValue!;
                   }),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                TextFormField(
-                  obscureText: notShowCPass,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(notShowCPass
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          notShowCPass = !notShowCPass;
-                        });
-                      },
-                      style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.primary)),
-                    ),
-                    errorStyle: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 8.0,
-                    ),
-                    hintStyle: Theme.of(context).textTheme.bodyText1,
-                    hintText: 'Confirm Password',
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30),
-                      ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: ((value) {
-                    if (value == null ||
-                        value.length < 8 ||
-                        value.length > 12) {
-                      return "Password must contain 8-12 characters!";
-                    }
-                  }),
-                  onSaved: ((newValue) {
-                    confirmPassword = newValue!;
-                  }),
-                ),
                 SizedBox(
                   height: 5,
                 ),
                 SizedBox(
-                  height: 155,
+                  height: 25,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -148,15 +127,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ))),
-                      onPressed: () {},
+                      onPressed: submitData,
                       child: Text(
                         "Change Password",
                         style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
                       )),
                 ),
-              ]),
+              ],
+            ),
+          ),
         ),
       ),
-    ));
+    );
   }
 }
