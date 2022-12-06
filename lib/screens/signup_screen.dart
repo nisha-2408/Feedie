@@ -19,6 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String contact = "";
   String email = "";
   String password = "";
+  var isLoading = false;
   var isError = false;
   final _form = GlobalKey<FormState>();
 
@@ -53,9 +54,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
     _form.currentState!.save();
     try {
+      setState(() {
+        isLoading = true;
+      });
       await Provider.of<Auth>(context, listen: false)
           .signUp(email, password, name, contact);
+      setState(() {
+        isLoading = false;
+      });
     } on HttpException catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       isError = true;
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -67,6 +77,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       isError = true;
       const errorMessage =
           "Could not authenticate you. Please try again later.";
@@ -83,7 +96,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-      child: Container(
+      child: isLoading ?
+      Container(
+          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text("Please Wait while we log you in :)", style: TextStyle(fontSize: 45),),
+              CircularProgressIndicator()
+            ],
+          ),
+        )
+       : Container(
         margin: EdgeInsets.symmetric(vertical: 130, horizontal: 20),
         child: Form(
           key: _form,

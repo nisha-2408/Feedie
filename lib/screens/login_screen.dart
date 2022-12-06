@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = "";
 
   String password = "";
+  var isLoading = false;
 
   final _form = GlobalKey<FormState>();
 
@@ -60,8 +61,17 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     _form.currentState!.save();
     try {
+      setState(() {
+        isLoading = true;
+      });
       await Provider.of<Auth>(context, listen: false).signIn(email, password);
+      setState(() {
+        isLoading = false;
+      });
     } on HttpException catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = 'Could not find a user with that email.';
@@ -70,6 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       print(error);
       const errorMessage =
           "Could not authenticate you. Please try again later.";
@@ -83,7 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: isLoading ? 
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text("Please Wait while we log you in :)", style: TextStyle(fontSize: 45),),
+              CircularProgressIndicator()
+            ],
+          ),
+        )
+         : Container(
           margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
           child: Form(
             key: _form,
