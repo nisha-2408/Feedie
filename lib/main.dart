@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages
 
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';

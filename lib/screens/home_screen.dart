@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports, no_leading_underscores_for_local_identifiers
+// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports, no_leading_underscores_for_local_identifiers, prefer_const_literals_to_create_immutables
 
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
@@ -17,6 +17,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var isInit = true;
   var isLoading = false;
+
+  int selectedIndex = 0;
+
+  void selectPage(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -39,9 +47,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final _userData = Provider.of<UserData>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Feedie"),
-      ),
       // ignore: prefer_const_constructors
       body: isLoading
           ? Center(
@@ -57,6 +62,36 @@ class _HomeState extends State<Home> {
                     child: Text("LogOut"))
               ],
             ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color.fromARGB(255, 187, 187, 187),
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Color.fromARGB(255, 58, 57, 57),
+        currentIndex: selectedIndex,
+        type: BottomNavigationBarType.fixed,
+        onTap: selectPage,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_activity),
+            label: 'Activity'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.volunteer_activism),
+            label: 'Donate'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Spot'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Profile'
+          ),
+        ],
+      ),
     );
   }
 }

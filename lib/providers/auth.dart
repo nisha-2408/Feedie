@@ -1,4 +1,4 @@
-// ignore_for_file: use_rethrow_when_possible, avoid_print, unused_element, unused_import, unused_local_variable, no_leading_underscores_for_local_identifiers
+// ignore_for_file: use_rethrow_when_possible, avoid_print, unused_element, unused_import, unused_local_variable, no_leading_underscores_for_local_identifiers, unused_field, prefer_const_constructors, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 import 'dart:async';
