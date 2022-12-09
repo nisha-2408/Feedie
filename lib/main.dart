@@ -4,6 +4,7 @@ import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/forgot_password_screen.dart';
 import 'package:feedie/screens/home_screen.dart';
+import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:feedie/screens/login_screen.dart';
 import 'package:feedie/screens/signup_screen.dart';
 import 'package:feedie/screens/splash_screen.dart';
@@ -75,7 +76,8 @@ class _MyAppState extends State<MyApp> {
               '/login': (context) => LoginScreen(),
               '/signup': (context) => SignUpScreen(),
               '/forgot_password': (context) => ForgotPassword(),
-              '/home': (context) => Home()
+              '/home': (context) => Home(),
+              HungerSpotForm.routeName:(context) => HungerSpotForm()
             },
           ),
         ));

@@ -1,7 +1,8 @@
-// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports, no_leading_underscores_for_local_identifiers, prefer_const_literals_to_create_immutables
-
+// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, unnecessary_import, implementation_imports, no_leading_underscores_for_local_identifiers, prefer_const_literals_to_create_immutables, unused_local_variable
+//AsTR3KiHyBHxhmcOK-gEnwDxtrxorOniwJqsf7Ww4X8OuRgSrlibd5dZqsZZSylX
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -52,16 +53,7 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Column(
-              children: [
-                Center(child: Text(_userData.name)),
-                TextButton(
-                    onPressed: () {
-                      Provider.of<Auth>(context, listen: false).logOut();
-                    },
-                    child: Text("LogOut"))
-              ],
-            ),
+          : HungerSpotScreen(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
