@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, unnecessary_import, implementation_imports, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, sort_child_properties_last, sized_box_for_whitespace
+// ignore_for_file: unused_import, prefer_const_constructors, unnecessary_import, implementation_imports, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, sort_child_properties_last, sized_box_for_whitespace, avoid_print
 import 'dart:io';
 import 'package:feedie/widgets/image_input.dart';
 import 'package:flutter/material.dart';

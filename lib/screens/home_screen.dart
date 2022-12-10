@@ -2,6 +2,7 @@
 //AsTR3KiHyBHxhmcOK-gEnwDxtrxorOniwJqsf7Ww4X8OuRgSrlibd5dZqsZZSylX
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -53,7 +54,7 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : HungerSpotScreen(),
+          : HungerSpotMap(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
