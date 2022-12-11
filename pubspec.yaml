@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_map: ^3.0.0
   geocoding: ^2.0.5
+  geolocator: ^9.0.2
   tuple: ^2.0.1
   latlong: ^0.6.1
   positioned_tap_detector_2: ^1.0.4

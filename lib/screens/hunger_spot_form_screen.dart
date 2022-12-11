@@ -7,7 +7,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 class HungerSpotForm extends StatefulWidget {
-  const HungerSpotForm({super.key});
+  final String? address;
+  const HungerSpotForm({this.address});
   static const routeName = '/add-hunger/spot';
 
   @override
@@ -22,6 +23,15 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
   bool criteria = false;
   final _form = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.address != null) {
+      address = widget.address!;
+    }
+    super.initState();
+  }
+
   void _selectImage(List<File> pickedImage) {
     _pickedImage = pickedImage;
     //print(pickedImage);
@@ -34,7 +44,7 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
     }
     _form.currentState!.save();
     _form.currentState!.reset();
-    print(address);
+    print(widget.address);
     print(_pickedImage);
     print(people);
     print(selectedValue);
@@ -51,6 +61,7 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(title: Text('Hunger Spot')),
       body: SingleChildScrollView(
@@ -61,6 +72,7 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: args,
                   decoration: InputDecoration(
                     errorStyle: TextStyle(
                       fontWeight: FontWeight.normal,
