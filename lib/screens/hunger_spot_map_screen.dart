@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import, import_of_legacy_library_into_null_safe, sort_child_properties_last, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, depend_on_referenced_packages
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -15,14 +16,13 @@ class HungerSpotMap extends StatefulWidget {
 class _HungerSpotMapState extends State<HungerSpotMap> {
   double long = 49.5;
   double lat = -0.09;
-  static LatLng? point = LatLng(49.5, -0.09);
+  static LatLng? point = LatLng(12.942117, 77.575363);
   var location = [];
-
- 
 
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
   }
 
