@@ -2,8 +2,12 @@
 //AsTR3KiHyBHxhmcOK-gEnwDxtrxorOniwJqsf7Ww4X8OuRgSrlibd5dZqsZZSylX
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/activity_screen.dart';
+import 'package:feedie/screens/donation_screen.dart';
+import 'package:feedie/screens/home_welcome_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
+import 'package:feedie/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,6 +25,7 @@ class _HomeState extends State<Home> {
   var isLoading = false;
 
   int selectedIndex = 0;
+  final List<Widget> pages = [HomeWelcome(), ActivityScreen(), DonationScreen(), HungerSpotScreen(), ProfileScreen()];
 
   void selectPage(int index) {
     setState(() {
@@ -54,7 +59,7 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : HungerSpotScreen(),
+          : pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
