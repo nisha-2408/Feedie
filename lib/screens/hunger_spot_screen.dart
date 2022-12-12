@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:feedie/screens/hunger_spot_form_screen.dart';
+import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:flutter/material.dart';
 
 class HungerSpotScreen extends StatelessWidget {
+  static const routeName = '/hunger-spot-screen';
   const HungerSpotScreen({super.key});
 
   @override
@@ -47,7 +49,7 @@ class HungerSpotScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(HungerSpotForm.routeName);
+                      Navigator.of(context).pushNamed(HungerSpotMap.routeName);
                     },
                     child: Text('Add Spot'),
                   )

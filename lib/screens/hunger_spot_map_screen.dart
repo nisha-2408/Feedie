@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_import, import_of_legacy_library_into_null_safe, sort_child_properties_last, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, depend_on_referenced_packages
+// ignore_for_file: prefer_const_constructors, unused_import, import_of_legacy_library_into_null_safe, sort_child_properties_last, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, depend_on_referenced_packages, avoid_print
 
 import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 
 class HungerSpotMap extends StatefulWidget {
   const HungerSpotMap({super.key});
+  static const routeName = '/hunger-spot-map';
 
   @override
   State<HungerSpotMap> createState() => _HungerSpotMapState();
@@ -59,6 +60,7 @@ class _HungerSpotMapState extends State<HungerSpotMap> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     isLoading = true;
     _determinePosition().then(
@@ -141,7 +143,6 @@ class _HungerSpotMapState extends State<HungerSpotMap> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                       children: [
                         ElevatedButton.icon(
                             onPressed: () {
@@ -153,8 +154,9 @@ class _HungerSpotMapState extends State<HungerSpotMap> {
                             label: Text('Add this spot!')),
                         ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(HungerSpotForm.routeName, arguments: "");
+                              Navigator.of(context).pushNamed(
+                                  HungerSpotForm.routeName,
+                                  arguments: "");
                             },
                             child: Text('Enter Manually'))
                       ],

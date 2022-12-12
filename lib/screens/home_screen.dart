@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : HungerSpotMap(),
+          : HungerSpotScreen(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,

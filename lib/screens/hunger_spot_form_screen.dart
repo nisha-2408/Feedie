@@ -1,9 +1,13 @@
-// ignore_for_file: unused_import, prefer_const_constructors, unnecessary_import, implementation_imports, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, sort_child_properties_last, sized_box_for_whitespace, avoid_print
+// ignore_for_file: unused_import, prefer_const_constructors, unnecessary_import, implementation_imports, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, sort_child_properties_last, sized_box_for_whitespace, avoid_print, use_key_in_widget_constructors, unused_local_variable
 import 'dart:io';
+import 'package:feedie/models/hunger_spot_data.dart';
+import 'package:feedie/providers/hunger_spot.dart';
+import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:feedie/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 import 'package:regexed_validator/regexed_validator.dart';
 
 class HungerSpotForm extends StatefulWidget {
@@ -18,13 +22,14 @@ class HungerSpotForm extends StatefulWidget {
 class _HungerSpotFormState extends State<HungerSpotForm> {
   String address = "";
   String? selectedValue;
-  List<File> _pickedImage = [];
+  List<String> _pickedImage = [];
   int people = 20;
   bool criteria = false;
   final _form = GlobalKey<FormState>();
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     if (widget.address != null) {
       address = widget.address!;
@@ -32,22 +37,68 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
     super.initState();
   }
 
-  void _selectImage(List<File> pickedImage) {
+  void _selectImage(List<String> pickedImage) {
     _pickedImage = pickedImage;
-    //print(pickedImage);
+    //print(_pickedImage);
   }
 
-  void _saveForm() {
+  void _showDialog(String message, bool isSuccess) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 200),
+        content: Container(
+          child: Column(
+            children: [
+              Image(
+                  image: AssetImage(
+                    'assets/images/tick.png',
+                  ),
+                  width: 200,
+                  height: 200),
+              Text('Your request has been sent to admin for approval!')
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/home', (Route<dynamic> route) => false);
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  void _saveForm() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
+    HungerSpotData data = HungerSpotData(
+        images: _pickedImage,
+        address: address,
+        population: people,
+        hungerSpotName: selectedValue!);
+    print(data);
+    try {
+      await Provider.of<HungerSpot>(context, listen: false)
+          .addHungerSpot(data)
+          .then((value) {
+        _showDialog('', true);
+      });
+    } catch (error) {
+      print(error);
+    }
     _form.currentState!.reset();
-    print(widget.address);
-    print(_pickedImage);
-    print(people);
-    print(selectedValue);
+    //print(address);
+    //print(_pickedImage);
+    //print(people);
+    //print(selectedValue);
   }
 
   List<DropdownMenuItem<String>> get dropdownItems {
@@ -62,6 +113,7 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as String;
+    address = args;
     return Scaffold(
       appBar: AppBar(title: Text('Hunger Spot')),
       body: SingleChildScrollView(
