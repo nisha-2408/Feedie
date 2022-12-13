@@ -22,7 +22,7 @@ class UserData with ChangeNotifier {
     final response = await http.get(Uri.parse(uri));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     extractedData.forEach(((key, value) => name = value['name']));
-    //print(extractedData);
+    print(extractedData);
     notifyListeners();
   }
 }

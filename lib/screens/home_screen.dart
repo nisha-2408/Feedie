@@ -3,6 +3,7 @@
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/activity_screen.dart';
+import 'package:feedie/screens/choose_role_screen.dart';
 import 'package:feedie/screens/donation_screen.dart';
 import 'package:feedie/screens/home_welcome_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : pages[selectedIndex],
+          : ChooseRole(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
