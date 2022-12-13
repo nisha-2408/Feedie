@@ -19,7 +19,7 @@ class _ChooseRoleState extends State<ChooseRole> {
   List<String> li = ['Donor', 'Volunteer', 'NGO'];
   void submitData() async {
     await Provider.of<UserData>(context, listen: false)
-        .setUserRole(li[selectedRole])
+        .setUserRole(li[selectedRole-1])
         .then(
       (value) {
         Provider.of<Auth>(context, listen: false).users = false;
