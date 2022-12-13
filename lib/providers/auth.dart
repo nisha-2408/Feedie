@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
+  bool isNewUser = false;
   String? _token;
   DateTime? _expiryDate;
   String? _userId;
@@ -24,6 +25,17 @@ class Auth with ChangeNotifier {
   bool get isAuth {
     //print(token);
     return token != null;
+  }
+
+  bool get newUser {
+    print(isNewUser);
+    return isNewUser;
+  }
+
+  set users(bool news) {
+    isNewUser = news;
+    //print(isNewUser);
+    notifyListeners();
   }
 
   String? get token {
@@ -65,6 +77,7 @@ class Auth with ChangeNotifier {
     //print(_userId);
     _expiryDate = DateTime.now().add(Duration(seconds: 3600));
     if (response.additionalUserInfo!.isNewUser) {
+      isNewUser = true;
       final uri =
           "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$_token";
       final no;
@@ -95,6 +108,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signUp(
       String email, String password, String name, String phoneNumber) async {
+    isNewUser = true;
     gl = false;
     const url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuXKRSKYd7CYjAu7h0KSy3HoC5CG1OuX4";

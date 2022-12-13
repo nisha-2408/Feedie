@@ -3,6 +3,7 @@
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/choose_role_screen.dart';
 import 'package:feedie/screens/forgot_password_screen.dart';
 import 'package:feedie/screens/home_screen.dart';
 import 'package:feedie/screens/hunger_spot_form_screen.dart';
@@ -72,7 +73,7 @@ class _MyAppState extends State<MyApp> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange))),
             home: auth.isAuth
-                ? Home()
+                ? auth.newUser ? ChooseRole() : Home()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (context, snapshot) =>

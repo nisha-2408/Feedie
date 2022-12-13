@@ -15,14 +15,34 @@ class UserData with ChangeNotifier {
   String email = "";
   String imageUrl = "";
   String contact = "";
+  String keys = "";
   Future<void> fetchUserData() async {
-    print("hi $token");
+    //print("hi $token");
     final uri =
         "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
     final response = await http.get(Uri.parse(uri));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    extractedData.forEach(((key, value) => name = value['name']));
-    print(extractedData);
+    extractedData.forEach(((key, value) {
+      keys = key;
+    }));
+    //print(keys);
     notifyListeners();
+  }
+
+  Future<void> setUserRole(String role) async {
+    final uri =
+        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
+    final response = await http.get(Uri.parse(uri));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    extractedData.forEach(((key, value) {
+      keys = key;
+    }));
+    print(keys);
+    final url =
+        "https://feedie-39c3c-default-rtdb.firebaseio.com/users/$keys.json?auth=$token";
+    final responses =
+        await http.patch(Uri.parse(url), body: json.encode({'role': role}));
+    final responseData = json.decode(responses.body) as Map<String, dynamic>;
+    print(responseData);
   }
 }
