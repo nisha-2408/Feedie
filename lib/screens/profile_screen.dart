@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
-
+import 'dart:io';
+import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/widgets/edit_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,13 +19,69 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   var isInit = true;
   var isLoading = false;
-  Map<String, String> data = {};
+  Map<String, dynamic> data = {};
+  File? _storedImage;
+  File? _storedImages;
+  List<String> _savedImages = [];
+  String img = "";
+
+  Future<void> _takePicture() async {
+    final picker = ImagePicker();
+    final XFile? imageFile =
+        await picker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    setState(() {
+      _storedImage = File(imageFile!.path);
+    });
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile!.path);
+    final savedImage =
+        await File(imageFile.path).copy('${appDir.path}/$fileName');
+    print(savedImage.path);
+    await Provider.of<UserData>(context, listen: false)
+        .setUserImage(savedImage.path)
+        .then(
+      (value) {
+        setState(() {
+          data = Provider.of<UserData>(context, listen: false).userData;
+          String img = data['imageUrl'] as String;
+        });
+      },
+    );
+    //print(savedImage.path);
+  }
+
+  void startEdit(BuildContext ctx, bool isEmail) {
+    showModalBottomSheet(
+      context: ctx,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            height: 250,
+            child: EditDetails(
+                isEmail: isEmail,
+                email: isEmail ? data['email'] : data['contact']),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> onRefresh(BuildContext context) async {
+    setState(() {
+      data = Provider.of<UserData>(context, listen: false).userData;
+      String img = data['imageUrl'] as String;
+    });
+  }
+
   @override
   void didChangeDependencies() {
     // ignore: todo
     // TODO: implement didChangeDependencies
     if (isInit) {
       data = Provider.of<UserData>(context, listen: false).userData;
+      String img = data['imageUrl'] as String;
       //print(data);
     }
     isInit = false;
@@ -30,13 +91,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            title: Text('Profile')),
-        body: SingleChildScrollView(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          title: Text('Profile')),
+      body: RefreshIndicator(
+        onRefresh: () => onRefresh(context),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Stack(
             children: [
               Stack(
@@ -77,9 +141,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: data['imageUrl'] as String != ""
-                                    ? NetworkImage(data['imageUrl'] as String)
-                                    : AssetImage('assets/images/account.png')
-                                        as ImageProvider,
+                                    ? img.startsWith("https")
+                                        ? NetworkImage(img)
+                                        : Image.file(File(data['imageUrl']!))
+                                            .image
+                                    : AssetImage('assets/images/account.png'),
                                 fit: BoxFit.fill),
                           ),
                         ),
@@ -102,10 +168,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: _takePicture,
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              child: Icon(Icons.camera_alt_outlined, color: Colors.orange,),
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.orange,
+                              ),
                             ),
                           ),
                         ),
@@ -119,7 +188,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       margin: EdgeInsets.only(left: 20),
                       child: Text(
                         data['name'] as String,
-                        style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 62, 62, 62),),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 62, 62, 62),
+                        ),
                       )),
                 ],
               ),
@@ -128,51 +200,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    GestureDetector(
-                      
-                      onTap: () {},
-                      child: Container(
-                        
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
                           color: Colors.white,
-                            border: Border.all(
-                                color: Color.fromARGB(255, 224, 224, 224)),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 194, 194, 194),
-                                  offset: Offset(0, 10),
-                                  spreadRadius: 5,
-                                  blurRadius: 20)
-                            ]),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.manage_accounts_sharp,
-                              color: Colors.blue,
-                              size: 40,
+                          border: Border.all(
+                              color: Color.fromARGB(255, 224, 224, 224)),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 194, 194, 194),
+                                offset: Offset(0, 10),
+                                spreadRadius: 5,
+                                blurRadius: 20)
+                          ]),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              startEdit(context, true);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  'Email: ',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 62, 62, 62),
+                                  ),
+                                ),
+                                Text(
+                                  data['email'],
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color.fromARGB(255, 114, 114, 114),
+                                  ),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              width: 25,
+                          ),
+                          Divider(),
+                          GestureDetector(
+                            onTap: () {
+                              startEdit(context, false);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Phone: ',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 62, 62, 62),
+                                  ),
+                                ),
+                                Text(
+                                  data['contact'] == ""
+                                      ? "No phone number"
+                                      : data['contact'],
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color.fromARGB(255, 114, 114, 114),
+                                  ),
+                                )
+                              ],
                             ),
-                            Text(
-                              'Profile',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Color.fromARGB(255, 62, 62, 62),),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     GestureDetector(
-                      
                       onTap: () {},
                       child: Container(
-                        
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                            color: Colors.white,
                             border: Border.all(
                                 color: Color.fromARGB(255, 224, 224, 224)),
                             borderRadius: BorderRadius.circular(10),
@@ -195,21 +305,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Text(
                               'Donations',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Color.fromARGB(255, 62, 62, 62),),
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 62, 62, 62),
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 15,),
+                    SizedBox(
+                      height: 15,
+                    ),
                     GestureDetector(
-                      
                       onTap: () {},
                       child: Container(
-                        
                         padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                            color: Colors.white,
                             border: Border.all(
                                 color: Color.fromARGB(255, 224, 224, 224)),
                             borderRadius: BorderRadius.circular(10),
@@ -232,10 +346,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Text(
                               'Notifications',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Color.fromARGB(255, 62, 62, 62),),
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 62, 62, 62),
+                              ),
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 150,
+                        height: 60,
+                        child: ElevatedButton.icon(
+                            icon: Icon(Icons.logout),
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ))),
+                            onPressed: () {
+                              Provider.of<Auth>(context, listen: false).logOut();
+                            },
+                            label: Text(
+                              "Logout",
+                              style: TextStyle(
+                                  fontSize: 18, fontFamily: 'Poppins'),
+                            )),
                       ),
                     )
                   ],
@@ -243,6 +387,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

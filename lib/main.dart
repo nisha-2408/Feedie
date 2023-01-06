@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
               '/onnboarding': (context) => OnBoardingScreen(),
               HungerSpotForm.routeName:(context) => HungerSpotForm(),
               HungerSpotMap.routeName: (context) => HungerSpotMap(),
-              HungerSpotScreen.routeName:(context) => HungerSpotScreen()
+              HungerSpotScreen.routeName:(context) => HungerSpotScreen(),
             },
           ),
         ));
