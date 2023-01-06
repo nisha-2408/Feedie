@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class DonationScreen extends StatelessWidget {
@@ -7,6 +9,7 @@ class DonationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Donate')),
+      // ignore: prefer_const_constructors
       body: Center(child: Text('Follow kshudha'))
     );
   }

@@ -10,6 +10,7 @@ import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:feedie/screens/login_screen.dart';
+import 'package:feedie/screens/onboarding_screen.dart';
 import 'package:feedie/screens/signup_screen.dart';
 import 'package:feedie/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -79,13 +80,14 @@ class _MyAppState extends State<MyApp> {
                     builder: (context, snapshot) =>
                         snapshot.connectionState == ConnectionState.waiting
                             ? SplashScreen()
-                            : LoginScreen(),
+                            : OnBoardingScreen(),
                   ),
             routes: {
               '/login': (context) => LoginScreen(),
               '/signup': (context) => SignUpScreen(),
               '/forgot_password': (context) => ForgotPassword(),
               '/home': (context) => Home(),
+              '/onnboarding': (context) => OnBoardingScreen(),
               HungerSpotForm.routeName:(context) => HungerSpotForm(),
               HungerSpotMap.routeName: (context) => HungerSpotMap(),
               HungerSpotScreen.routeName:(context) => HungerSpotScreen()

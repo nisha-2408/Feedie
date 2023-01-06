@@ -32,7 +32,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void googleLogin() async {
-    await Provider.of<Auth>(context, listen: false).googleLogin();
+    await Provider.of<Auth>(context, listen: false).googleLogin().then((value) {
+      setState(() {
+      isLoading = true;
+    });
+      Navigator.of(context).pop();
+    });
   }
 
   void _showErrorDialog(String message) {
@@ -64,7 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLoading = true;
       });
-      await Provider.of<Auth>(context, listen: false).signIn(email, password);
+      await Provider.of<Auth>(context, listen: false)
+          .signIn(email, password)
+          .then((value) => Navigator.of(context).pop());
       setState(() {
         isLoading = false;
       });
@@ -96,199 +103,199 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: isLoading ? 
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              Text("Please Wait while we log you in :)", style: TextStyle(fontSize: 45),),
-              CircularProgressIndicator()
-            ],
-          ),
-        )
-         : Container(
-          margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
-          child: Form(
-            key: _form,
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Wellcome Back!",
-                      style: Theme.of(context).textTheme.caption,
-                    )),
-                Text(
-                  "Nice to meet you! Please login to access and start donating to help others",
-                  style: Theme.of(context).textTheme.bodyText1,
+        child: isLoading
+            ? Container(
+                margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+                alignment: Alignment.center,
+                child: Text(
+                  "Thank you for choosing :)",
+                  style: TextStyle(fontSize: 45),
                 ),
-                SizedBox(
-                  height: 35,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    errorStyle: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 8.0,
-                    ),
-                    hintStyle: Theme.of(context).textTheme.bodyText1,
-                    hintText: 'Email',
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30),
+              )
+            : Container(
+                margin: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+                child: Form(
+                  key: _form,
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Wellcome Back!",
+                            style: Theme.of(context).textTheme.caption,
+                          )),
+                      Text(
+                        "Nice to meet you! Please login to access and start donating to help others",
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textInputAction: TextInputAction.next,
-                  validator: ((value) {
-                    if (!validator.email(value!) || value == null) {
-                      return "Please enter a valid email!";
-                    }
-                    return null;
-                  }),
-                  onSaved: ((newValue) {
-                    email = newValue!;
-                  }),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                TextFormField(
-                  obscureText: notShowPass,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(notShowPass
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          notShowPass = !notShowPass;
-                        });
-                      },
-                      style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.primary)),
-                    ),
-                    errorStyle: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 8.0,
-                    ),
-                    hintStyle: Theme.of(context).textTheme.bodyText1,
-                    hintText: 'Password',
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30),
+                      SizedBox(
+                        height: 35,
                       ),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: ((value) {
-                    if (value == null ||
-                        value.length < 8 ||
-                        value.length > 12) {
-                      return "Password must contain 8-12 characters!";
-                    }
-                  }),
-                  onSaved: ((newValue) {
-                    password = newValue!;
-                  }),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        loadForgotPassword(context);
-                      },
-                      child: Text(
-                        "Forgot Password?",
-                        style: Theme.of(context).textTheme.bodyText2,
+                      TextFormField(
+                        decoration: InputDecoration(
+                          errorStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 8.0,
+                          ),
+                          hintStyle: Theme.of(context).textTheme.bodyText1,
+                          hintText: 'Email',
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        textInputAction: TextInputAction.next,
+                        validator: ((value) {
+                          if (!validator.email(value!) || value == null) {
+                            return "Please enter a valid email!";
+                          }
+                          return null;
+                        }),
+                        onSaved: ((newValue) {
+                          email = newValue!;
+                        }),
                       ),
-                    )),
-                SizedBox(
-                  height: 25,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ))),
-                      onPressed: submitData,
-                      child: Text(
-                        "Login",
-                        style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
-                      )),
-                ),
-                SizedBox(
-                  height: 55,
-                  child: Text(
-                    "or",
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ))),
-                      onPressed: googleLogin,
-                      child: Row(
+                      SizedBox(
+                        height: 15,
+                      ),
+                      TextFormField(
+                        obscureText: notShowPass,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: Icon(notShowPass
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                notShowPass = !notShowPass;
+                              });
+                            },
+                            style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Theme.of(context).colorScheme.primary)),
+                          ),
+                          errorStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 8.0,
+                          ),
+                          hintStyle: Theme.of(context).textTheme.bodyText1,
+                          hintText: 'Password',
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        validator: ((value) {
+                          if (value == null ||
+                              value.length < 8 ||
+                              value.length > 12) {
+                            return "Password must contain 8-12 characters!";
+                          }
+                        }),
+                        onSaved: ((newValue) {
+                          password = newValue!;
+                        }),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Align(
+                          alignment: Alignment.topRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              loadForgotPassword(context);
+                            },
+                            child: Text(
+                              "Forgot Password?",
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          )),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ))),
+                            onPressed: submitData,
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontSize: 18, fontFamily: 'Poppins'),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 55,
+                        child: Text(
+                          "or",
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ))),
+                            onPressed: googleLogin,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
+                                    image: AssetImage(
+                                        'assets/images/google_logo.png')),
+                                Text(
+                                  "Google",
+                                  style: TextStyle(
+                                      fontSize: 18, fontFamily: 'Poppins'),
+                                ),
+                              ],
+                            )),
+                      ),
+                      SizedBox(
+                        height: 45,
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image(
-                              image:
-                                  AssetImage('assets/images/google_logo.png')),
                           Text(
-                            "Google",
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                            "Don't have an account?",
+                            style: TextStyle(color: Colors.black),
                           ),
+                          GestureDetector(
+                              onTap: () {
+                                loadSignUp(context);
+                              },
+                              child: Text(
+                                " Create Account",
+                                style: Theme.of(context).textTheme.bodyText2,
+                              ))
                         ],
-                      )),
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
-                  height: 45,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          loadSignUp(context);
-                        },
-                        child: Text(
-                          " Create Account",
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ))
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

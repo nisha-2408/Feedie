@@ -16,6 +16,16 @@ class UserData with ChangeNotifier {
   String imageUrl = "";
   String contact = "";
   String keys = "";
+
+  Map<String, String> get userData {
+    return {
+      'name': name,
+      'email': email,
+      'imageUrl': imageUrl,
+      'contact': contact
+    };
+  }
+
   Future<void> fetchUserData() async {
     //print("hi $token");
     final uri =
@@ -24,6 +34,11 @@ class UserData with ChangeNotifier {
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     extractedData.forEach(((key, value) {
       keys = key;
+      name = value['name'];
+      email = value['email'];
+      imageUrl = value['imageUrl'];
+      contact = value['contact'];
+      //print(name);
     }));
     //print(keys);
     notifyListeners();

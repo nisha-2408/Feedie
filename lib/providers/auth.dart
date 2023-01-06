@@ -23,7 +23,8 @@ class Auth with ChangeNotifier {
   GoogleSignInAccount? _user;
   Timer? _authTimer;
   bool get isAuth {
-    //print(token);
+    //print("is Auth func called!!");
+    //print(token != null);
     return token != null;
   }
 
@@ -95,6 +96,7 @@ class Auth with ChangeNotifier {
             'userId': response.user!.uid
           }));
     }
+    //print(_token);
     //print(json.decode(res.body));
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
