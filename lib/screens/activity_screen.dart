@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_declarations, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,7 +13,7 @@ class ActivityScreen extends StatelessWidget {
 
   Widget content() {
     final donations = List<String>.generate(5, (index) => 'Donation $index');
-    final length = 0;
+    final length = 1;
     return  length == 0 ? 
     Center(child: Text('No donations as of now!'),)
      : Container(
@@ -45,7 +45,7 @@ class ActivityScreen extends StatelessWidget {
                       textColor: Colors.white,
                       fontSize: 15);
                 },
-                leading: Image.asset("assets/images/food.png"),
+                leading: Image.asset("assets/images/food1.png"),
                 title: Text(donations[index]),
                 subtitle: Text("Pending"),
               ),

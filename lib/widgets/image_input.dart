@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ImageInput extends StatefulWidget {
   final Function onSelectImage;
@@ -18,6 +19,7 @@ class _ImageInputState extends State<ImageInput> {
   File? _storedImage;
   List<File> _storedImages = [];
   List<String> _savedImages = [];
+  UploadTask? uploadTask;
 
   Future<void> _takePicture() async {
     final picker = ImagePicker();
@@ -30,7 +32,14 @@ class _ImageInputState extends State<ImageInput> {
     final appDir = await syspaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile!.path);
     final savedImage = await File(imageFile.path).copy('${appDir.path}/$fileName');
-    _savedImages.add(savedImage.path);
+    final paths = 'hunger-spot/${fileName}';
+    final pickedFile = File(imageFile.path);
+    final ref = FirebaseStorage.instance.ref().child(paths);
+    uploadTask = ref.putFile(pickedFile);
+    final snapShot = await uploadTask!.whenComplete(() => null);
+    var done = false;
+    final url = await snapShot.ref.getDownloadURL();
+    _savedImages.add(url);
     //print(savedImage.path);
     widget.onSelectImage(_savedImages);
   }

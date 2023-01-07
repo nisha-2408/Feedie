@@ -3,12 +3,14 @@
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/activity_screen.dart';
+import 'package:feedie/screens/admin_screen.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
 import 'package:feedie/screens/donation_screen.dart';
 import 'package:feedie/screens/home_welcome_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:feedie/screens/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -24,6 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var isInit = true;
   var isLoading = false;
+  
 
   int selectedIndex = 0;
   final List<Widget> pages = [HomeWelcome(), ActivityScreen(), DonationScreen(), HungerSpotScreen(), ProfileScreen()];
@@ -54,14 +57,16 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final _userData = Provider.of<UserData>(context, listen: false);
+    bool isAdmin = Provider.of<UserData>(context, listen: false).getAdmin;
     return Scaffold(
       // ignore: prefer_const_constructors
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
+          : isAdmin ? AdminScreen()
           : pages[selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: isLoading ? null : isAdmin ? null : BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Color.fromARGB(255, 58, 57, 57),

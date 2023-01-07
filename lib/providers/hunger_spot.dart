@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, empty_catches, unused_local_variable, avoid_print
+// ignore_for_file: unused_import, empty_catches, unused_local_variable, avoid_print, unnecessary_new
 
 import 'package:feedie/models/hunger_spot_data.dart';
 import 'package:feedie/providers/auth.dart';
@@ -11,6 +11,7 @@ class HungerSpot with ChangeNotifier {
   String? token;
   String? userId;
   HungerSpot({required this.token, required this.userId});
+  List<HungerSpotData> data = [];
 
   Future<void> addHungerSpot(HungerSpotData data) async {
     print(token);
@@ -32,5 +33,59 @@ class HungerSpot with ChangeNotifier {
     } catch (error) {
       print(error);
     }
+  }
+
+  Future<void> getHungerSpot() async {
+    final url =
+        "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot.json?auth=$token";
+    final response = await http.get(Uri.parse(url));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    //print(extractedData);
+    extractedData.forEach(((key, value) {
+      //print(value);
+      if (!value['isApproved'] == true) {
+        HungerSpotData newData = new HungerSpotData(
+            id: key,
+            images: value['images'],
+            address: value['address'],
+            population: value['population'],
+            hungerSpotName: value['hungerSpotName']);
+        data.add(newData);
+      }
+    }));
+  }
+
+  List<HungerSpotData> get hungerData {
+    //print(data.length);
+    return data;
+  }
+
+  Future<void> approveSpot(String id) async {
+    final url =
+        "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot/$id.json?auth=$token";
+    final response = await http.patch(Uri.parse(url),
+        body: json.encode({'isApproved': true}));
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    for (HungerSpotData item in data) {
+      if (item.id == id) {
+        data.removeAt(data.indexOf(item));
+        break;
+      }
+    }
+    print(data.length);
+    notifyListeners();
+  }
+  Future<void> rejectSpot(String id) async {
+    final url =
+        "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot/$id.json?auth=$token";
+    final response = await http.delete(Uri.parse(url));
+    for (HungerSpotData item in data) {
+      if (item.id == id) {
+        data.removeAt(data.indexOf(item));
+        break;
+      }
+    }
+    print(data.length);
+    notifyListeners();
   }
 }

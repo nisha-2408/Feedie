@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, avoid_print
+// ignore_for_file: unused_import, avoid_print, prefer_is_not_empty
 
 import 'dart:convert';
 
@@ -16,6 +16,7 @@ class UserData with ChangeNotifier {
   String imageUrl = "";
   String contact = "";
   String keys = "";
+  var isAdmin = false;
 
   Map<String, dynamic> get userData {
     return {
@@ -32,16 +33,25 @@ class UserData with ChangeNotifier {
         "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
     final response = await http.get(Uri.parse(uri));
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    extractedData.forEach(((key, value) {
-      keys = key;
-      name = value['name'];
-      email = value['email'];
-      imageUrl = value['imageUrl'];
-      contact = value['contact'];
-      //print(name);
-    }));
+    if (!extractedData.isEmpty) {
+      extractedData.forEach(((key, value) {
+        keys = key;
+        name = value['name'];
+        email = value['email'];
+        imageUrl = value['imageUrl'];
+        contact = value['contact'];
+        //print(name);
+      }));
+    } else {
+      isAdmin = true;
+    }
+
     //print(keys);
     notifyListeners();
+  }
+
+  bool get getAdmin {
+    return isAdmin;
   }
 
   Future<void> setUserRole(String role) async {

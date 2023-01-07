@@ -1,9 +1,10 @@
+// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, unnecessary_import, use_key_in_widget_constructors
+
 import 'package:feedie/providers/user_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:regexed_validator/regexed_validator.dart';
 
 class EditDetails extends StatefulWidget {
   final bool isEmail;
@@ -27,7 +28,6 @@ class _EditDetailsState extends State<EditDetails> {
     await Provider.of<UserData>(context, listen: false)
         .setUserDetails(det, widget.isEmail)
         .then((value) {
-
       Navigator.of(context).pop();
     });
   }
@@ -72,6 +72,21 @@ class _EditDetailsState extends State<EditDetails> {
                       ),
                     ),
                     onSaved: (newValue) => det = newValue!,
+                    validator: ((value) {
+                      if (!widget.isEmail) {
+                        if (!validator.phone(value!) ||
+                            value == null ||
+                            value.length != 10) {
+                          return "Please enter a valid phone number";
+                        }
+                        return null;
+                      } else {
+                        if (!validator.email(value!) || value == null) {
+                          return "Please enter a valid email!";
+                        }
+                        return null;
+                      }
+                    }),
                   ),
                   SizedBox(
                     height: 25,

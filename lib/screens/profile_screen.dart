@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, depend_on_referenced_packages, unused_import, unused_field, prefer_final_fields, avoid_print, use_build_context_synchronously, sized_box_for_whitespace
 import 'dart:io';
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/widgets/edit_details.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:regexed_validator/regexed_validator.dart';
 import 'package:path_provider/path_provider.dart' as syspaths;
 
 class ProfileScreen extends StatefulWidget {
@@ -24,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? _storedImages;
   List<String> _savedImages = [];
   String img = "";
+  UploadTask? uploadTask;
 
   Future<void> _takePicture() async {
     final picker = ImagePicker();
@@ -37,9 +40,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final savedImage =
         await File(imageFile.path).copy('${appDir.path}/$fileName');
     print(savedImage.path);
-    await Provider.of<UserData>(context, listen: false)
-        .setUserImage(savedImage.path)
-        .then(
+    final paths = 'profile/${fileName}';
+    final pickedFile = File(imageFile.path);
+    final ref = FirebaseStorage.instance.ref().child(paths);
+    uploadTask = ref.putFile(pickedFile);
+    final snapShot = await uploadTask!.whenComplete(() => null);
+    var done = false;
+    final url = await snapShot.ref.getDownloadURL();
+    print(url);
+    await Provider.of<UserData>(context, listen: false).setUserImage(url).then(
       (value) {
         setState(() {
           data = Provider.of<UserData>(context, listen: false).userData;
@@ -72,8 +81,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       data = Provider.of<UserData>(context, listen: false).userData;
       String img = data['imageUrl'] as String;
+      if (!img.startsWith('https')) {
+        setState(() {
+          isNetWork = false;
+        });
+      }
     });
   }
+
+  bool isNetWork = true;
 
   @override
   void didChangeDependencies() {
@@ -82,6 +98,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (isInit) {
       data = Provider.of<UserData>(context, listen: false).userData;
       String img = data['imageUrl'] as String;
+      if (!img.startsWith('https')) {
+        setState(() {
+          isNetWork = false;
+        });
+      }
       //print(data);
     }
     isInit = false;
@@ -141,11 +162,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: data['imageUrl'] as String != ""
-                                    ? img.startsWith("https")
-                                        ? NetworkImage(img)
-                                        : Image.file(File(data['imageUrl']!))
-                                            .image
-                                    : AssetImage('assets/images/account.png'),
+                                    ? NetworkImage(data['imageUrl'])
+                                    : AssetImage('assets/images/account.png')
+                                        as ImageProvider,
                                 fit: BoxFit.fill),
                           ),
                         ),
@@ -226,17 +245,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   'Email: ',
                                   style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color.fromARGB(255, 62, 62, 62),
-                                  ),
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 62, 62, 62),
+                                      overflow: TextOverflow.ellipsis),
                                 ),
-                                Text(
-                                  data['email'],
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color.fromARGB(255, 114, 114, 114),
+                                Flexible(
+                                  child: Text(
+                                    data['email'],
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w300,
+                                        color:
+                                            Color.fromARGB(255, 114, 114, 114),
+                                        overflow: TextOverflow.ellipsis),
                                   ),
                                 )
                               ],
@@ -373,7 +395,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(25),
                             ))),
                             onPressed: () {
-                              Provider.of<Auth>(context, listen: false).logOut();
+                              Provider.of<Auth>(context, listen: false)
+                                  .logOut();
                             },
                             label: Text(
                               "Logout",

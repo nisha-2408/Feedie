@@ -3,6 +3,7 @@
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/admin_screen.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
 import 'package:feedie/screens/forgot_password_screen.dart';
 import 'package:feedie/screens/home_screen.dart';
@@ -91,6 +92,7 @@ class _MyAppState extends State<MyApp> {
               HungerSpotForm.routeName:(context) => HungerSpotForm(),
               HungerSpotMap.routeName: (context) => HungerSpotMap(),
               HungerSpotScreen.routeName:(context) => HungerSpotScreen(),
+              AdminScreen.routeName:(context) => AdminScreen()
             },
           ),
         ));

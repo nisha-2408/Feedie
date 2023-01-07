@@ -34,8 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void googleLogin() async {
     await Provider.of<Auth>(context, listen: false).googleLogin().then((value) {
       setState(() {
-      isLoading = true;
-    });
+        isLoading = true;
+      });
       Navigator.of(context).pop();
     });
   }
@@ -71,7 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       await Provider.of<Auth>(context, listen: false)
           .signIn(email, password)
-          .then((value) => Navigator.of(context).pop());
+          .then((value) {
+        print('success');
+        Navigator.of(context).pop();
+      });
       setState(() {
         isLoading = false;
       });
