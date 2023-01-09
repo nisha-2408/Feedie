@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore, empty_statements, dead_code
+// ignore_for_file: unused_import, prefer_const_constructors, duplicate_ignore
 
 import 'package:feedie/models/hunger_spot_data.dart';
 import 'package:feedie/providers/auth.dart';
@@ -8,15 +8,15 @@ import 'package:feedie/widgets/hunger_spot_itm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
-  static const routeName = '/admin';
+class AllHungerSpots extends StatefulWidget {
+  const AllHungerSpots({super.key});
+  static const routeName = '/all-name';
 
   @override
-  State<AdminScreen> createState() => _AdminScreenState();
+  State<AllHungerSpots> createState() => _AllHungerSpotsState();
 }
 
-class _AdminScreenState extends State<AdminScreen> {
+class _AllHungerSpotsState extends State<AllHungerSpots> {
   var isInit = true;
   var isLoading = false;
   @override
@@ -24,14 +24,7 @@ class _AdminScreenState extends State<AdminScreen> {
     // ignore: todo
     // TODO: implement didChangeDependencies
     if (isInit) {
-      isLoading = true;
-      Provider.of<HungerSpot>(
-        context,
-      ).getHungerSpot().then((value) {
-        setState(() {
-          isLoading = false;
-        });
-      });
+      
     }
     isInit = false;
     super.didChangeDependencies();
@@ -48,15 +41,16 @@ class _AdminScreenState extends State<AdminScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : data.hungerData.isNotEmpty
+            : data.allHungerData.isNotEmpty
                 ? ListView.builder(
                     itemBuilder: (context, index) {
-                      return HungerSpotItem(item: data.hungerData[index], isAll: false,);
+                      return HungerSpotItem(item: data.allHungerData[index], isAll: true,);
                     },
-                    itemCount: data.hungerData.length,
+                    itemCount: data.allHungerData.length,
                   )
+                // ignore: prefer_const_constructors
                 : Center(
-                    child: Text("No requests as of now!"),
+                    child: Text("No hunger spots added yet! "),
                   ));
   }
 }

@@ -78,6 +78,9 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
     if (!isValid) {
       return;
     }
+    if (_pickedImage.isEmpty) {
+      return;
+    }
     _form.currentState!.save();
     HungerSpotData data = HungerSpotData(
         images: _pickedImage,

@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, use_key_in_widget_constructors, library_private_types_in_public_api, unused_local_variable, sort_child_properties_last, prefer_const_constructors, prefer_const_constructors_in_immutables, unused_field, prefer_final_fields, avoid_print, prefer_is_not_empty
+// ignore_for_file: depend_on_referenced_packages, use_key_in_widget_constructors, library_private_types_in_public_api, unused_local_variable, sort_child_properties_last, prefer_const_constructors, prefer_const_constructors_in_immutables, unused_field, prefer_final_fields, avoid_print, prefer_is_not_empty, unnecessary_brace_in_string_interps
 
 import 'dart:io';
 

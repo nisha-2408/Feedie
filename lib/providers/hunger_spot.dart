@@ -12,6 +12,7 @@ class HungerSpot with ChangeNotifier {
   String? userId;
   HungerSpot({required this.token, required this.userId});
   List<HungerSpotData> data = [];
+  List<HungerSpotData> allData = [];
 
   Future<void> addHungerSpot(HungerSpotData data) async {
     print(token);
@@ -36,6 +37,8 @@ class HungerSpot with ChangeNotifier {
   }
 
   Future<void> getHungerSpot() async {
+    data = [];
+    allData = [];
     final url =
         "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot.json?auth=$token";
     final response = await http.get(Uri.parse(url));
@@ -43,21 +46,29 @@ class HungerSpot with ChangeNotifier {
     //print(extractedData);
     extractedData.forEach(((key, value) {
       //print(value);
+      HungerSpotData newData = new HungerSpotData(
+          id: key,
+          images: value['images'],
+          address: value['address'],
+          population: value['population'],
+          hungerSpotName: value['hungerSpotName']);
       if (!value['isApproved'] == true) {
-        HungerSpotData newData = new HungerSpotData(
-            id: key,
-            images: value['images'],
-            address: value['address'],
-            population: value['population'],
-            hungerSpotName: value['hungerSpotName']);
         data.add(newData);
+      } else {
+        allData.add(newData);
       }
+      
     }));
   }
 
   List<HungerSpotData> get hungerData {
     //print(data.length);
     return data;
+  }
+
+  List<HungerSpotData> get allHungerData {
+    //print(allData.length);
+    return allData;
   }
 
   Future<void> approveSpot(String id) async {
@@ -75,13 +86,14 @@ class HungerSpot with ChangeNotifier {
     print(data.length);
     notifyListeners();
   }
-  Future<void> rejectSpot(String id) async {
+
+  Future<void> rejectSpot(String id, bool isAll) async {
     final url =
         "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot/$id.json?auth=$token";
     final response = await http.delete(Uri.parse(url));
     for (HungerSpotData item in data) {
       if (item.id == id) {
-        data.removeAt(data.indexOf(item));
+        isAll ? allData.removeAt(allData.indexOf(item)) : data.removeAt(data.indexOf(item));
         break;
       }
     }

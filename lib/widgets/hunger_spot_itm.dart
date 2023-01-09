@@ -8,14 +8,36 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HungerSpotItem extends StatefulWidget {
-  const HungerSpotItem({required this.item});
+  const HungerSpotItem({required this.item, required this.isAll});
   final HungerSpotData item;
+  final bool isAll;
 
   @override
   State<HungerSpotItem> createState() => _HungerSpotItemState();
 }
 
 class _HungerSpotItemState extends State<HungerSpotItem> {
+  void _showDialog(String img) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 200),
+        content: Container(
+          decoration:
+              BoxDecoration(image: DecorationImage(image: NetworkImage(img))),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -67,12 +89,17 @@ class _HungerSpotItemState extends State<HungerSpotItem> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.item.images.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(widget.item.images[index]),
-                                fit: BoxFit.fill),
-                          ),
+                  return GestureDetector(
+                    onTap: () {
+                      _showDialog(widget.item.images[index]);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(widget.item.images[index]),
+                            fit: BoxFit.fill),
+                      ),
+                    ),
                   );
                 },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -84,19 +111,21 @@ class _HungerSpotItemState extends State<HungerSpotItem> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  !widget.isAll
+                      ? ElevatedButton(
+                          onPressed: () {
+                            Provider.of<HungerSpot>(context, listen: false)
+                                .approveSpot(widget.item.id!);
+                          },
+                          child: Text('Approve'),
+                        )
+                      : SizedBox(),
                   ElevatedButton(
                     onPressed: () {
                       Provider.of<HungerSpot>(context, listen: false)
-                          .approveSpot(widget.item.id!);
+                          .rejectSpot(widget.item.id!, widget.isAll);
                     },
-                    child: Text('Approve'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Provider.of<HungerSpot>(context, listen: false)
-                          .rejectSpot(widget.item.id!);
-                    },
-                    child: Text('Reject'),
+                    child: !widget.isAll ? Text('Reject') : Text('Delete'),
                   ),
                 ],
               )

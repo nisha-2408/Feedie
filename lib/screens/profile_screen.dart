@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, depend_on_referenced_packages, unused_import, unused_field, prefer_final_fields, avoid_print, use_build_context_synchronously, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, depend_on_referenced_packages, unused_import, unused_field, prefer_final_fields, avoid_print, use_build_context_synchronously, sized_box_for_whitespace, unused_local_variable
 import 'dart:io';
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final savedImage =
         await File(imageFile.path).copy('${appDir.path}/$fileName');
     print(savedImage.path);
-    final paths = 'profile/${fileName}';
+    final paths = 'profile/$fileName';
     final pickedFile = File(imageFile.path);
     final ref = FirebaseStorage.instance.ref().child(paths);
     uploadTask = ref.putFile(pickedFile);
