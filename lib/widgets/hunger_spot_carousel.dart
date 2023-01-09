@@ -16,7 +16,8 @@ class HungerSpotCarousel extends StatelessWidget {
                 Text(
                   'Hunger Spots',
                   style: TextStyle(
-                    fontSize: 22.0,
+                    color: Color.fromARGB(255, 26, 26, 26),
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),
@@ -68,14 +69,15 @@ class HungerSpotCarousel extends StatelessWidget {
                               Text(
                                 hungerSpot.hungerSpotName,
                                 style: TextStyle(
-                                    fontSize: 20.0,
+                                  color: Color.fromARGB(255, 26, 26, 26),
+                                    fontSize: 17.0,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1.0),
                               ),
                               Text(
                                 'Population: ${hungerSpot.population}',
                                 style: TextStyle(
-                                  fontSize: 18.0,
+                                  fontSize: 15.0,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey,
                                 ),

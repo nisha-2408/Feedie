@@ -42,6 +42,9 @@ class HungerSpot with ChangeNotifier {
     final url =
         "https://feedie-39c3c-default-rtdb.firebaseio.com/HungerSpot.json?auth=$token";
     final response = await http.get(Uri.parse(url));
+    if (json.decode(response.body)==null) {
+      return;
+    }
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     //print(extractedData);
     extractedData.forEach(((key, value) {
@@ -57,7 +60,6 @@ class HungerSpot with ChangeNotifier {
       } else {
         allData.add(newData);
       }
-      
     }));
   }
 
@@ -93,11 +95,13 @@ class HungerSpot with ChangeNotifier {
     final response = await http.delete(Uri.parse(url));
     for (HungerSpotData item in data) {
       if (item.id == id) {
-        isAll ? allData.removeAt(allData.indexOf(item)) : data.removeAt(data.indexOf(item));
+        isAll
+            ? allData.removeAt(allData.indexOf(item))
+            : data.removeAt(data.indexOf(item));
         break;
       }
     }
-    print(data.length);
+    print(allData.length);
     notifyListeners();
   }
 }

@@ -50,23 +50,24 @@ class _ImageInputState extends State<ImageInput> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         !_storedImages.isEmpty
-            ? GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _storedImages.length,
-                itemBuilder: (context, index) {
-                  return Image.file(
-                    _storedImages[index],
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  );
-                },
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3 / 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10),
-              )
+            ? Container(
+              height: 250,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _storedImages.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.file(
+                        _storedImages[index],
+                        fit: BoxFit.cover,
+                        width: 150,
+                      ),
+                    );
+                  },
+                ),
+            )
             : Text('No Image Taken'),
         SizedBox(
           width: 10,

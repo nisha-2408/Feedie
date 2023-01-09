@@ -16,7 +16,8 @@ class RequestCarousel extends StatelessWidget {
                 Text(
                   'Food Requests',
                   style: TextStyle(
-                    fontSize: 22.0,
+                    color: Color.fromARGB(255, 26, 26, 26),
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),
@@ -67,7 +68,8 @@ class RequestCarousel extends StatelessWidget {
                               Text(
                                 'Meals required : ${request.mealsRequired}',
                                 style: TextStyle(
-                                    fontSize: 20.0,
+                                    fontSize: 12.0,
+                                    color: Color.fromARGB(255, 26, 26, 26),
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1.0),
                               ),

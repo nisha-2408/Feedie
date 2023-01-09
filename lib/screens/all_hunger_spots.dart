@@ -24,7 +24,14 @@ class _AllHungerSpotsState extends State<AllHungerSpots> {
     // ignore: todo
     // TODO: implement didChangeDependencies
     if (isInit) {
-      
+      isLoading = true;
+      Provider.of<HungerSpot>(
+        context,
+      ).getHungerSpot().then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
     }
     isInit = false;
     super.didChangeDependencies();
