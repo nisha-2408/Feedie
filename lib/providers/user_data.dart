@@ -16,6 +16,7 @@ class UserData with ChangeNotifier {
   String imageUrl = "";
   String contact = "";
   String keys = "";
+  String role = "";
   var isAdmin = false;
 
   Map<String, dynamic> get userData {
@@ -23,7 +24,8 @@ class UserData with ChangeNotifier {
       'name': name,
       'email': email,
       'imageUrl': imageUrl,
-      'contact': contact
+      'contact': contact,
+      'role': role
     };
   }
 
@@ -40,6 +42,7 @@ class UserData with ChangeNotifier {
         email = value['email'];
         imageUrl = value['imageUrl'];
         contact = value['contact'];
+        role = value['role'];
         //print(name);
       }));
     } else {

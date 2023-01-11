@@ -9,6 +9,8 @@ import 'package:feedie/screens/donation_screen.dart';
 import 'package:feedie/screens/home_welcome_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
+import 'package:feedie/screens/ngo_home_screen.dart';
+import 'package:feedie/screens/ngo_welcome_screen.dart';
 import 'package:feedie/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +67,8 @@ class _HomeState extends State<Home> {
               child: CircularProgressIndicator(),
             )
           : isAdmin ? AdminScreen()
-          : pages[selectedIndex],
-      bottomNavigationBar: isLoading ? null : isAdmin ? null : BottomNavigationBar(
+          : _userData.userData['role']=='NGO' ? NGOWelcome() : pages[selectedIndex],
+      bottomNavigationBar: isLoading ? null : isAdmin || _userData.userData['role']=='NGO' ? null : BottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 187, 187, 187),
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor: Color.fromARGB(255, 58, 57, 57),

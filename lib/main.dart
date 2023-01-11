@@ -8,6 +8,7 @@ import 'package:feedie/screens/all_hunger_spots.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
 import 'package:feedie/screens/forgot_password_screen.dart';
 import 'package:feedie/screens/home_screen.dart';
+import 'package:feedie/screens/hunger_spot_donate.dart';
 import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
@@ -94,7 +95,8 @@ class _MyAppState extends State<MyApp> {
               HungerSpotMap.routeName: (context) => HungerSpotMap(),
               HungerSpotScreen.routeName:(context) => HungerSpotScreen(),
               AdminScreen.routeName:(context) => AdminScreen(),
-              AllHungerSpots.routeName:(context) => AllHungerSpots()
+              AllHungerSpots.routeName:(context) => AllHungerSpots(),
+              HungerSpotDonate.routeName:(context) => HungerSpotDonate()
             },
           ),
         ));

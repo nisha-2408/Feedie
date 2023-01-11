@@ -1,11 +1,15 @@
+import 'package:feedie/providers/hunger_spot.dart';
+import 'package:feedie/screens/hunger_spot_donate.dart';
 import 'package:flutter/material.dart';
 import 'package:feedie/models/hunger_spot_data.dart';
+import 'package:provider/provider.dart';
 
 class HungerSpotCarousel extends StatelessWidget {
   const HungerSpotCarousel({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<HungerSpotData> data = Provider.of<HungerSpot>(context, listen: false).allHungerData;
     return Column(
       children: <Widget>[
         Padding(
@@ -23,7 +27,7 @@ class HungerSpotCarousel extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => print("See All"),
+                  onTap: () => Navigator.of(context).pushNamed(HungerSpotDonate.routeName),
                   child: Text(
                     'See All',
                     style: TextStyle(
@@ -43,9 +47,8 @@ class HungerSpotCarousel extends StatelessWidget {
           height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: hungerSpots.length,
+            itemCount: 2,
             itemBuilder: (BuildContext context, int index) {
-              HungerSpotData hungerSpot = hungerSpots[index];
               return Container(
                 margin: EdgeInsets.all(10.0),
                 width: 260.0,
@@ -67,24 +70,24 @@ class HungerSpotCarousel extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                hungerSpot.hungerSpotName,
+                                data[index].hungerSpotName,
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 26, 26, 26),
-                                    fontSize: 17.0,
+                                    color: Color.fromARGB(255, 26, 26, 26),
+                                    fontSize: 15.0,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1.0),
                               ),
                               Text(
-                                'Population: ${hungerSpot.population}',
+                                'Population: ${data[index].population}',
                                 style: TextStyle(
-                                  fontSize: 15.0,
+                                  fontSize: 12.0,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.grey,
                                 ),
                               ),
                               SizedBox(height: 2.0),
                               Text(
-                                hungerSpot.address,
+                                data[index].address,
                                 style: TextStyle(color: Colors.grey),
                               )
                             ],
@@ -108,7 +111,7 @@ class HungerSpotCarousel extends StatelessWidget {
                         child: Image(
                           height: 180.0,
                           width: 240.0,
-                          image: AssetImage(hungerSpot.images[0]),
+                          image: NetworkImage(data[index].images[0]),
                           fit: BoxFit.cover,
                         ),
                       ),
