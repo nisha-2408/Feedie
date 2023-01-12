@@ -3,9 +3,11 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedie/models/http_exception.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -80,22 +82,18 @@ class Auth with ChangeNotifier {
     _expiryDate = DateTime.now().add(Duration(seconds: 3600));
     if (response.additionalUserInfo!.isNewUser) {
       isNewUser = true;
-      final uri =
-          "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$_token";
       final no;
       if (response.user!.phoneNumber == null) {
         no = "";
       } else {
         no = response.user!.phoneNumber;
       }
-      final res = await http.post(Uri.parse(uri),
-          body: json.encode({
-            'name': response.user!.displayName,
-            'email': response.user!.email,
-            'contact': no,
-            'imageUrl': response.user!.photoURL,
-            'userId': response.user!.uid
-          }));
+      FirebaseFirestore.instance.collection('users').doc(_userId).set({
+        'name': response.user!.displayName,
+        'email': response.user!.email,
+        'contact': no,
+        'imageUrl': response.user!.photoURL,
+      });
     }
     //print(_token);
     //print(json.decode(res.body));
@@ -113,45 +111,30 @@ class Auth with ChangeNotifier {
       String email, String password, String name, String phoneNumber) async {
     isNewUser = true;
     gl = false;
-    const url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuXKRSKYd7CYjAu7h0KSy3HoC5CG1OuX4";
     try {
-      final response = await http.post(Uri.parse(url),
-          body: json.encode({
-            'email': email,
-            'password': password,
-            'returnSecureToken': true
-          }));
-      //print(json.decode(response.body));
-      final responseData = json.decode(response.body);
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
-      } else {
-        var token = responseData['idToken'];
-        final uri =
-            "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token";
-        final res = await http.post(Uri.parse(uri),
-            body: json.encode({
-              'name': name,
-              'email': email,
-              'contact': phoneNumber,
-              'imageUrl': '',
-              'userId': responseData['localId']
-            }));
-        print(json.decode(res.body));
-      }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(
-            responseData['expiresIn'],
-          ),
-        ),
+      authResult = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final user = FirebaseAuth.instance.currentUser;
+      //print(response);
+      var firebaseUser = FirebaseAuth.instance.currentUser;
+      _token = await firebaseUser!.getIdToken(false);
+      //print(response.user!.uid);
+      _userId = authResult!.user!.uid;
+
+      final today = DateTime.now();
+      _expiryDate = today.add(
+        Duration(seconds: 3600),
       );
     } catch (error) {
       throw error;
     }
+    FirebaseFirestore.instance.collection('users').doc(_userId).set({
+      'name': name,
+      'email': email,
+      'contact': phoneNumber,
+      'imageUrl': '',
+    });
+    isNewUser = true;
     autoLogout();
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
@@ -168,31 +151,19 @@ class Auth with ChangeNotifier {
     String password,
   ) async {
     gl = false;
-
-    const url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuXKRSKYd7CYjAu7h0KSy3HoC5CG1OuX4";
     try {
       authResult = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
-      final response = await http.post(Uri.parse(url),
-          body: json.encode({
-            'email': email,
-            'password': password,
-            'returnSecureToken': true
-          }));
-      final responseData = json.decode(response.body);
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
-      }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
+          .signInWithEmailAndPassword(email: email, password: password);
+      final user = FirebaseAuth.instance.currentUser;
+      //print(response);
+      var firebaseUser = FirebaseAuth.instance.currentUser;
+      _token = await firebaseUser!.getIdToken(false);
+      //print(response.user!.uid);
+      _userId = authResult!.user!.uid;
+
       final today = DateTime.now();
       _expiryDate = today.add(
-        Duration(
-          seconds: int.parse(
-            responseData['expiresIn'],
-          ),
-        ),
+        Duration(seconds: 3600),
       );
     } catch (error) {
       throw error;
@@ -246,8 +217,8 @@ class Auth with ChangeNotifier {
     if (gl) {
       gl = false;
       await googleSignIn.disconnect();
-      FirebaseAuth.instance.signOut();
     }
+    FirebaseAuth.instance.signOut();
   }
 
   void autoLogout() {

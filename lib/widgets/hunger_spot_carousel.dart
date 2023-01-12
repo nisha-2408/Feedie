@@ -45,9 +45,9 @@ class HungerSpotCarousel extends StatelessWidget {
         ),
         Container(
           height: 300,
-          child: ListView.builder(
+          child: data.isNotEmpty ? ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 2,
+            itemCount: 1,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin: EdgeInsets.all(10.0),
@@ -120,7 +120,7 @@ class HungerSpotCarousel extends StatelessWidget {
                 ),
               );
             },
-          ),
+          ) : Text('No hunger spot'),
         )
       ],
     );

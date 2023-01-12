@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedie/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,23 +32,28 @@ class UserData with ChangeNotifier {
 
   Future<void> fetchUserData() async {
     //print("hi $token");
-    final uri =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
-    final response = await http.get(Uri.parse(uri));
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    if (!extractedData.isEmpty) {
-      extractedData.forEach(((key, value) {
-        keys = key;
-        name = value['name'];
-        email = value['email'];
-        imageUrl = value['imageUrl'];
-        contact = value['contact'];
-        role = value['role'];
-        //print(name);
-      }));
-    } else {
-      isAdmin = true;
-    }
+    await FirebaseFirestore.instance.collection('users').doc(userId).get().then(
+      (DocumentSnapshot doc) {
+        if (!doc.exists) {
+          isAdmin = true;
+          return;
+        }
+        final data = doc.data() as Map<String, dynamic>;
+        if (data.isEmpty) {
+          isAdmin = true;
+        } else {
+          name = data['name'];
+          email = data['email'];
+          imageUrl = data['imageUrl'];
+          contact = data['contact'];
+          role = data['role'];
+        }
+        // ...
+      },
+      onError: (e) {
+        print(e);
+      },
+    );
 
     //print(keys);
     notifyListeners();
@@ -58,37 +64,17 @@ class UserData with ChangeNotifier {
   }
 
   Future<void> setUserRole(String role) async {
-    final uri =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
-    final response = await http.get(Uri.parse(uri));
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    extractedData.forEach(((key, value) {
-      keys = key;
-    }));
-    print(keys);
-    final url =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users/$keys.json?auth=$token";
-    final responses =
-        await http.patch(Uri.parse(url), body: json.encode({'role': role}));
-    final responseData = json.decode(responses.body) as Map<String, dynamic>;
-    print(responseData);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'role': role});
   }
 
   Future<void> setUserImage(String imagePath) async {
-    final uri =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
-    final response = await http.get(Uri.parse(uri));
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    extractedData.forEach(((key, value) {
-      keys = key;
-    }));
-    print(keys);
-    final url =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users/$keys.json?auth=$token";
-    final responses = await http.patch(Uri.parse(url),
-        body: json.encode({'imageUrl': imagePath}));
-    final responseData = json.decode(responses.body) as Map<String, dynamic>;
-    print(responseData);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'imageUrl': imagePath});
     imageUrl = imagePath;
     notifyListeners();
   }
@@ -101,20 +87,10 @@ class UserData with ChangeNotifier {
     } else {
       email = det;
     }
-    final uri =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users.json?auth=$token&orderBy=\"userId\"&equalTo=\"$userId\"";
-    final response = await http.get(Uri.parse(uri));
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    extractedData.forEach(((key, value) {
-      keys = key;
-    }));
-    print(keys);
-    final url =
-        "https://feedie-39c3c-default-rtdb.firebaseio.com/users/$keys.json?auth=$token";
-    final responses =
-        await http.patch(Uri.parse(url), body: json.encode({info: det}));
-    final responseData = json.decode(responses.body) as Map<String, dynamic>;
-    print(responseData);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({info: det});
     notifyListeners();
   }
 }

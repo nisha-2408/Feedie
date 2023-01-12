@@ -63,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           isLoading = false;
         });
-        Navigator.of(context).popUntil(ModalRoute.withName('/onboarding'));
+        Navigator.of(context).pushReplacementNamed('/home');
       });
     } on HttpException catch (error) {
       setState(() {
@@ -80,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
+      print(error);
       setState(() {
         isLoading = false;
       });
@@ -88,7 +89,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           "Could not authenticate you. Please try again later.";
       _showErrorDialog(errorMessage);
     }
-    _form.currentState!.reset();
     if (!isError) {
       Navigator.of(context).pop();
     }
