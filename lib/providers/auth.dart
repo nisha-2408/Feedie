@@ -22,6 +22,7 @@ class Auth with ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
   Timer? _authTimer;
+  UserCredential? authResult;
   bool get isAuth {
     //print("is Auth func called!!");
     //print(token != null);
@@ -167,9 +168,12 @@ class Auth with ChangeNotifier {
     String password,
   ) async {
     gl = false;
+
     const url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuXKRSKYd7CYjAu7h0KSy3HoC5CG1OuX4";
     try {
+      authResult = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
       final response = await http.post(Uri.parse(url),
           body: json.encode({
             'email': email,

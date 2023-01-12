@@ -2,6 +2,7 @@
 
 import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/widgets/donation_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:feedie/widgets/hunger_spot_carousel.dart';
@@ -58,7 +59,7 @@ class _HomeWelcomeState extends State<HomeWelcome> {
           padding: EdgeInsets.symmetric(vertical: 30.0),
           children: <Widget>[
             SizedBox(height: 5.0),
-            data['role'] == 'Food Soldier' ? Center(child: Text('Hello food soldier'),) : SizedBox(height: 0,),
+            data['role'] == 'Volunteer' ? DonationRequest() : SizedBox(height: 0,),
             SizedBox(height: 5.0),
             RequestCarousel(),
             SizedBox(height: 15.0),
