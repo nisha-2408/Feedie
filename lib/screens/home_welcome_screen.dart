@@ -20,6 +20,7 @@ class _HomeWelcomeState extends State<HomeWelcome> {
   var isInit = true;
   @override
   void didChangeDependencies() {
+    // ignore: todo
     // TODO: implement didChangeDependencies
     if (isInit) {
       isLoading = true;

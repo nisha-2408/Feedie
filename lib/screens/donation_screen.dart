@@ -1,10 +1,17 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, body_might_complete_normally_nullable, non_constant_identifier_names, unused_field, unused_local_variable
+
+import 'package:feedie/models/food_request.dart';
+import 'package:feedie/providers/food_request_process.dart';
 import 'package:flutter/material.dart';
 import 'package:feedie/widgets/image_input.dart';
+import 'package:provider/provider.dart';
 
+// ignore: constant_identifier_names
 enum ProductTypeEnum { Veg, NonVeg }
 
 class DonationScreen extends StatefulWidget {
   const DonationScreen({super.key});
+  static const routeName = '/donation-form';
 
   @override
   State<DonationScreen> createState() => _DonationScreenState();
@@ -70,20 +77,28 @@ class _DonationScreenState extends State<DonationScreen> {
   var types = ['Veg', 'NonVeg'];
   var meal = ['BreakFast', 'Lunch', 'Dinner'];
 
-  void submitData() {
+  void submitData(String toAddr) async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     _form.currentState!.save();
-    print(food_name);
-    print(address);
-    print(_pickedImage);
-    print(types[selected-1]);
-    print(meal[select-1]);
-    print(value);
-    print(values);
-    _form.currentState!.reset();
+    FoodRequest data = FoodRequest(
+        foodName: food_name,
+        address: address,
+        foodType: types[selected - 1],
+        mealType: meal[select - 1],
+        qty: value.toInt(),
+        hrs: values.toInt(),
+        imageUrls: _pickedImage,
+        toAddress: toAddr,
+        userId: '');
+    await Provider.of<FoodRequestProcess>(context, listen: false)
+        .addFoodRequest(data)
+        .then((value) {
+      _form.currentState!.reset();
+      Navigator.of(context).pop();
+    });
   }
 
   final _form = GlobalKey<FormState>();
@@ -92,6 +107,8 @@ class _DonationScreenState extends State<DonationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final toAddr = ModalRoute.of(context)!.settings.arguments;
+    print(toAddr);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Donation"),
@@ -216,7 +233,7 @@ class _DonationScreenState extends State<DonationScreen> {
               ImageInput(_selectImage),
               SizedBox(height: 5),
               OutlinedButton(
-                onPressed: submitData,
+                onPressed: () => submitData(toAddr.toString()),
                 style:
                     OutlinedButton.styleFrom(minimumSize: const Size(200, 50)),
                 child: Text(

@@ -44,7 +44,7 @@ class HungerSpot with ChangeNotifier {
         return e.data();
       });
       var i = 0;
-      docs.forEach((element) {
+      for (var element in docs) {
         HungerSpotData newData = new HungerSpotData(
             id: ids[i],
             images: element['images'],
@@ -57,7 +57,7 @@ class HungerSpot with ChangeNotifier {
         } else {
           allData.add(newData);
         }
-      });
+      }
     });
   }
 

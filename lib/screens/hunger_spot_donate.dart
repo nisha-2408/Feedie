@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, duplicate_ignore, unused_import
+
 import 'package:feedie/models/hunger_spot_data.dart';
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/hunger_spot.dart';

@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, sized_box_for_whitespace, use_key_in_widget_constructors
+
+import 'package:feedie/screens/donation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:feedie/models/hunger_spot_data.dart';
 
@@ -102,7 +105,10 @@ class _DisplayCardState extends State<DisplayCard> {
               Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(DonationScreen.routeName,
+                        arguments: widget.item.address);
+                  },
                   child: Text('Donate'),
                 ),
               )

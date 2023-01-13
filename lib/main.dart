@@ -1,11 +1,13 @@
 // ignore_for_file: prefer_const_constructors, depend_on_referenced_packages
 
 import 'package:feedie/providers/auth.dart';
+import 'package:feedie/providers/food_request_process.dart';
 import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/admin_screen.dart';
 import 'package:feedie/screens/all_hunger_spots.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
+import 'package:feedie/screens/donation_screen.dart';
 import 'package:feedie/screens/forgot_password_screen.dart';
 import 'package:feedie/screens/home_screen.dart';
 import 'package:feedie/screens/hunger_spot_donate.dart';
@@ -13,6 +15,7 @@ import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:feedie/screens/login_screen.dart';
+import 'package:feedie/screens/ngo_food_request.dart';
 import 'package:feedie/screens/onboarding_screen.dart';
 import 'package:feedie/screens/signup_screen.dart';
 import 'package:feedie/screens/splash_screen.dart';
@@ -49,6 +52,10 @@ class _MyAppState extends State<MyApp> {
                 HungerSpot(token: auth.token, userId: auth.userId),
             create: (context) => HungerSpot(token: '', userId: ''),
           ),
+          ChangeNotifierProxyProvider<Auth, FoodRequestProcess>(
+            create: (context) => FoodRequestProcess(userId: ''), 
+            update: (context, value, previous) => FoodRequestProcess(userId: value.userId),
+          )
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
@@ -96,7 +103,9 @@ class _MyAppState extends State<MyApp> {
               HungerSpotScreen.routeName:(context) => HungerSpotScreen(),
               AdminScreen.routeName:(context) => AdminScreen(),
               AllHungerSpots.routeName:(context) => AllHungerSpots(),
-              HungerSpotDonate.routeName:(context) => HungerSpotDonate()
+              HungerSpotDonate.routeName:(context) => HungerSpotDonate(),
+              DonationScreen.routeName:(context) => DonationScreen(),
+              NGOFoodRequest.routeName:(context) => NGOFoodRequest()
             },
           ),
         ));

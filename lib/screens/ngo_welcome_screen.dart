@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, duplicate_ignore, prefer_const_literals_to_create_immutables
+
 import 'package:feedie/screens/ngo_home_screen.dart';
 import 'package:feedie/screens/ngo_profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class NGOWelcome extends StatefulWidget {
 
 class _NGOWelcomeState extends State<NGOWelcome> {
   int selectedIndex = 0;
+  // ignore: prefer_const_constructors
   final List<Widget> pages = [NGOHomeScreen(), NGOProfile()];
   void selectPage(int index) {
     setState(() {

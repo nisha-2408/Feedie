@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
+
 import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/screens/hunger_spot_donate.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class HungerSpotCarousel extends StatelessWidget {
               children: <Widget>[
                 Text(
                   'Hunger Spots',
+                  // ignore: prefer_const_constructors
                   style: TextStyle(
                     color: Color.fromARGB(255, 26, 26, 26),
                     fontSize: 20.0,

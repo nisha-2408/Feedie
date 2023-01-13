@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, duplicate_ignore, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:feedie/models/request.dart';
 
@@ -24,8 +26,10 @@ class RequestCarousel extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () => print("See All"),
+                  // ignore: prefer_const_constructors
                   child: Text(
                     'See All',
+                    // ignore: prefer_const_constructors
                     style: TextStyle(
                       color: Colors.orange,
                       fontSize: 16,
