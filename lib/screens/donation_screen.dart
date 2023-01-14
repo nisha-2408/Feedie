@@ -51,7 +51,7 @@ class _DonationScreenState extends State<DonationScreen> {
 
   void _selectImage(List<String> pickedImage) {
     _pickedImage = pickedImage;
-    //print(_pickedImage);
+    print(_pickedImage);
   }
 
   Widget customRadios(String text, int index) {

@@ -105,7 +105,7 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
                         )
                       ],
                     ),
-                    SizedBox(width: 60.0),
+                    SizedBox(width: 30.0),
                     GestureDetector(
                       onTap: () => Navigator.of(context).pushNamed(NGOFoodRequest.routeName),
                       child: Container(

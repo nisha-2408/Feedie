@@ -31,7 +31,8 @@ class _ImageInputState extends State<ImageInput> {
     });
     final appDir = await syspaths.getApplicationDocumentsDirectory();
     final fileName = path.basename(imageFile!.path);
-    final savedImage = await File(imageFile.path).copy('${appDir.path}/$fileName');
+    final savedImage =
+        await File(imageFile.path).copy('${appDir.path}/$fileName');
     final paths = 'hunger-spot/${fileName}';
     final pickedFile = File(imageFile.path);
     final ref = FirebaseStorage.instance.ref().child(paths);
@@ -39,8 +40,9 @@ class _ImageInputState extends State<ImageInput> {
     final snapShot = await uploadTask!.whenComplete(() => null);
     var done = false;
     final url = await snapShot.ref.getDownloadURL();
+    print(url);
     _savedImages.add(url);
-    //print(savedImage.path);
+    print(_savedImages);
     widget.onSelectImage(_savedImages);
   }
 
@@ -51,8 +53,8 @@ class _ImageInputState extends State<ImageInput> {
       children: <Widget>[
         !_storedImages.isEmpty
             ? Container(
-              height: 250,
-              child: ListView.builder(
+                height: 250,
+                child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemCount: _storedImages.length,
@@ -67,7 +69,7 @@ class _ImageInputState extends State<ImageInput> {
                     );
                   },
                 ),
-            )
+              )
             : Text('No Image Taken'),
         SizedBox(
           width: 10,

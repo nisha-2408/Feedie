@@ -60,7 +60,7 @@ class _DonationRequestState extends State<DonationRequest> {
   @override
   Widget build(BuildContext context) {
     List<FoodRequest> data = [];
-    data = Provider.of<FoodRequestProcess>(context).requestData;
+    data = Provider.of<FoodRequestProcess>(context).requestDatas;
     return Column(
       children: <Widget>[
         Padding(
@@ -103,7 +103,6 @@ class _DonationRequestState extends State<DonationRequest> {
             scrollDirection: Axis.horizontal,
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
-              Request request = requests[index];
               return GestureDetector(
                 onTap: () => _showDialogue(data[index].userId),
                 child: Container(

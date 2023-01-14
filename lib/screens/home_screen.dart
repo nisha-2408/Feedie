@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
       isLoading = true;
       //print(isLoading);
       Provider.of<UserData>(context).fetchUserData();
-      Provider.of<FoodRequestProcess>(context).getFoodRequest().then((value) {
+      Provider.of<FoodRequestProcess>(context).getAllRequests().then((value) {
         setState(() {
           isLoading = false;
         });

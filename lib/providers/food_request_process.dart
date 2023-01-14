@@ -9,6 +9,7 @@ class FoodRequestProcess with ChangeNotifier {
   String? userId;
   FoodRequestProcess({required this.userId});
   List<FoodRequest> data = [];
+  List<FoodRequest> datas = [];
   String name = '';
   String contact = '';
 
@@ -28,6 +29,37 @@ class FoodRequestProcess with ChangeNotifier {
         'toAddress': data.toAddress
       });
     } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getAllRequests() async {
+    datas = [];
+    try {
+      await FirebaseFirestore.instance
+          .collection('food-donation')
+          .get()
+          .then((value) {
+        var docs = value.docs.map((e) {
+          return e.data();
+        });
+        for (var ele in docs) {
+          FoodRequest newData = FoodRequest(
+              foodName: ele['foodName'],
+              address: ele['address'],
+              foodType: ele['foodType'],
+              mealType: ele['mealType'],
+              qty: ele['qty'],
+              hrs: ele['hrs'],
+              imageUrls: ele['images'],
+              userId: ele['userId'],
+              status: ele['status'],
+              toAddress: ele['toAddress']);
+          datas.add(newData);
+        }
+      });
+    } catch (err) {
+      print(err);
       throw err;
     }
   }
@@ -66,9 +98,12 @@ class FoodRequestProcess with ChangeNotifier {
   List<FoodRequest> get requestData {
     return data;
   }
+  List<FoodRequest> get requestDatas {
+    return datas;
+  }
 
   Future<void> getUserDetails(String id) async {
-    await FirebaseFirestore.instance.collection('users').doc(userId).get().then(
+    await FirebaseFirestore.instance.collection('users').doc(id).get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
         name = data['name'];
