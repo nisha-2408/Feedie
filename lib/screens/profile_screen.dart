@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/widgets/edit_address.dart';
 import 'package:feedie/widgets/edit_details.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: EditDetails(
                 isEmail: isEmail,
                 email: isEmail ? data['email'] : data['contact']),
+          ),
+        );
+      },
+    );
+  }
+  void startEditAddress(BuildContext ctx, ) {
+    showModalBottomSheet(
+      context: ctx,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            height: 250,
+            child: EditAddress(
+                email: data['address']),
           ),
         );
       },
@@ -284,6 +301,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   data['contact'] == ""
                                       ? "No phone number"
                                       : data['contact'],
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color.fromARGB(255, 114, 114, 114),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Divider(),
+                          GestureDetector(
+                            onTap: () {
+                              startEditAddress(context);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  'Address: ',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 62, 62, 62),
+                                  ),
+                                ),
+                                Text(
+                                  data['address'] == ""
+                                      ? "No address"
+                                      : data['address'],
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w300,

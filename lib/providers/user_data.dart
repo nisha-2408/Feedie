@@ -27,7 +27,8 @@ class UserData with ChangeNotifier {
       'email': email,
       'imageUrl': imageUrl,
       'contact': contact,
-      'role': role
+      'role': role,
+      'address': address
     };
   }
 
@@ -48,9 +49,7 @@ class UserData with ChangeNotifier {
           imageUrl = data['imageUrl'];
           contact = data['contact'];
           role = data['role'];
-          if (role == 'NGO') {
-            address = data['address'];
-          }
+          address = data['address'];
         }
         // ...
       },
@@ -82,6 +81,13 @@ class UserData with ChangeNotifier {
         .collection('users')
         .doc(userId)
         .update({'role': role});
+  }
+
+  Future<void> setAddress(String role) async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'address': role});
   }
 
   Future<void> setUserImage(String imagePath) async {
