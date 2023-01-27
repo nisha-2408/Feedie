@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors, body_might_complete_normally_nullable, non_constant_identifier_names, unused_field, unused_local_variable
 
 import 'package:feedie/models/food_request.dart';
+import 'package:feedie/models/screen_arguments.dart';
 import 'package:feedie/providers/food_request_process.dart';
 import 'package:flutter/material.dart';
 import 'package:feedie/widgets/image_input.dart';
@@ -77,7 +78,7 @@ class _DonationScreenState extends State<DonationScreen> {
   var types = ['Veg', 'NonVeg'];
   var meal = ['BreakFast', 'Lunch', 'Dinner'];
 
-  void submitData(String toAddr) async {
+  void submitData(String toAddr, bool isNgo, String id, int qty) async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
@@ -94,7 +95,7 @@ class _DonationScreenState extends State<DonationScreen> {
         toAddress: toAddr,
         userId: '');
     await Provider.of<FoodRequestProcess>(context, listen: false)
-        .addFoodRequest(data)
+        .addFoodRequest(data, isNgo, id, qty)
         .then((value) {
       _form.currentState!.reset();
       Navigator.of(context).pop();
@@ -107,7 +108,7 @@ class _DonationScreenState extends State<DonationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final toAddr = ModalRoute.of(context)!.settings.arguments;
+    final toAddr = ModalRoute.of(context)!.settings.arguments as ScreenArgumnets;
     print(toAddr);
     return Scaffold(
       appBar: AppBar(
@@ -233,7 +234,7 @@ class _DonationScreenState extends State<DonationScreen> {
               ImageInput(_selectImage),
               SizedBox(height: 5),
               OutlinedButton(
-                onPressed: () => submitData(toAddr.toString()),
+                onPressed: () => submitData(toAddr.address, toAddr.isNGO, toAddr.id, toAddr.qty),
                 style:
                     OutlinedButton.styleFrom(minimumSize: const Size(200, 50)),
                 child: Text(

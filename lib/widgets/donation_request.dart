@@ -2,6 +2,7 @@
 
 import 'package:feedie/models/food_request.dart';
 import 'package:feedie/providers/food_request_process.dart';
+import 'package:feedie/screens/accepted_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:feedie/models/request.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class DonationRequest extends StatefulWidget {
 }
 
 class _DonationRequestState extends State<DonationRequest> {
-  void _showDialogue(String id) {
+  void _showDialogue(String id, String ids) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -25,7 +26,7 @@ class _DonationRequestState extends State<DonationRequest> {
           ElevatedButton(
               onPressed: () {
                 Provider.of<FoodRequestProcess>(context, listen: false)
-                    .getUserDetails(id)
+                    .getUserDetails(id, ids)
                     .then((value) => _showOther());
               },
               child: Text("Accept"))
@@ -80,7 +81,7 @@ class _DonationRequestState extends State<DonationRequest> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => print("See All"),
+                  onTap: () {},
                   // ignore: prefer_const_constructors
                   child: Text(
                     'See All',
@@ -99,12 +100,12 @@ class _DonationRequestState extends State<DonationRequest> {
         ),
         Container(
           height: 300,
-          child: ListView.builder(
+          child: data.isEmpty ? Center(child: Text('No request yet!!'),) : ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
-                onTap: () => _showDialogue(data[index].userId),
+                onTap: () => _showDialogue(data[index].userId, data[index].id),
                 child: Container(
                   margin: EdgeInsets.all(10.0),
                   width: 210.0,

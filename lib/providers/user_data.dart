@@ -18,6 +18,7 @@ class UserData with ChangeNotifier {
   String contact = "";
   String keys = "";
   String role = "";
+  String address = '';
   var isAdmin = false;
 
   Map<String, dynamic> get userData {
@@ -47,6 +48,9 @@ class UserData with ChangeNotifier {
           imageUrl = data['imageUrl'];
           contact = data['contact'];
           role = data['role'];
+          if (role == 'NGO') {
+            address = data['address'];
+          }
         }
         // ...
       },
@@ -61,6 +65,16 @@ class UserData with ChangeNotifier {
 
   bool get getAdmin {
     return isAdmin;
+  }
+
+  Map get getDetails {
+    return {
+      'userId': userId,
+      'name': name,
+      'address': address,
+      'contact': contact,
+      'imageUrl': imageUrl
+    };
   }
 
   Future<void> setUserRole(String role) async {

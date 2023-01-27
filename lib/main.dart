@@ -3,7 +3,9 @@
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/food_request_process.dart';
 import 'package:feedie/providers/hunger_spot.dart';
+import 'package:feedie/providers/ngo_food_request.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/accepted_request_screen.dart';
 import 'package:feedie/screens/admin_screen.dart';
 import 'package:feedie/screens/all_hunger_spots.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
@@ -15,6 +17,7 @@ import 'package:feedie/screens/hunger_spot_form_screen.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
 import 'package:feedie/screens/hunger_spot_screen.dart';
 import 'package:feedie/screens/login_screen.dart';
+import 'package:feedie/screens/ngo_donate_screen.dart';
 import 'package:feedie/screens/ngo_food_request.dart';
 import 'package:feedie/screens/onboarding_screen.dart';
 import 'package:feedie/screens/signup_screen.dart';
@@ -53,8 +56,23 @@ class _MyAppState extends State<MyApp> {
             create: (context) => HungerSpot(token: '', userId: ''),
           ),
           ChangeNotifierProxyProvider<Auth, FoodRequestProcess>(
-            create: (context) => FoodRequestProcess(userId: ''), 
-            update: (context, value, previous) => FoodRequestProcess(userId: value.userId),
+            create: (context) => FoodRequestProcess(userId: ''),
+            update: (context, value, previous) =>
+                FoodRequestProcess(userId: value.userId),
+          ),
+          ChangeNotifierProxyProvider<UserData, NGORequest>(
+            create: (context) => NGORequest(
+                userId: '',
+                ngoName: '',
+                address: '',
+                contact: '',
+                imageUrl: ''),
+            update: (context, value, previous) => NGORequest(
+                userId: value.getDetails['userId'],
+                ngoName: value.getDetails['name'],
+                address: value.getDetails['address'],
+                imageUrl: value.getDetails['imageUrl'],
+                contact: value.getDetails['contact']),
           )
         ],
         child: Consumer<Auth>(
@@ -84,7 +102,9 @@ class _MyAppState extends State<MyApp> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange))),
             home: auth.isAuth
-                ? auth.newUser ? ChooseRole() : Home()
+                ? auth.newUser
+                    ? ChooseRole()
+                    : Home()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (context, snapshot) =>
@@ -98,14 +118,16 @@ class _MyAppState extends State<MyApp> {
               '/forgot_password': (context) => ForgotPassword(),
               '/home': (context) => Home(),
               '/onnboarding': (context) => OnBoardingScreen(),
-              HungerSpotForm.routeName:(context) => HungerSpotForm(),
+              HungerSpotForm.routeName: (context) => HungerSpotForm(),
               HungerSpotMap.routeName: (context) => HungerSpotMap(),
-              HungerSpotScreen.routeName:(context) => HungerSpotScreen(),
-              AdminScreen.routeName:(context) => AdminScreen(),
-              AllHungerSpots.routeName:(context) => AllHungerSpots(),
-              HungerSpotDonate.routeName:(context) => HungerSpotDonate(),
-              DonationScreen.routeName:(context) => DonationScreen(),
-              NGOFoodRequest.routeName:(context) => NGOFoodRequest()
+              HungerSpotScreen.routeName: (context) => HungerSpotScreen(),
+              AdminScreen.routeName: (context) => AdminScreen(),
+              AllHungerSpots.routeName: (context) => AllHungerSpots(),
+              HungerSpotDonate.routeName: (context) => HungerSpotDonate(),
+              DonationScreen.routeName: (context) => DonationScreen(),
+              NGOFoodRequest.routeName: (context) => NGOFoodRequest(),
+              NGODonate.routeName:(context) => NGODonate(),
+              FoodAcepted.routeName:(context) => FoodAcepted()
             },
           ),
         ));

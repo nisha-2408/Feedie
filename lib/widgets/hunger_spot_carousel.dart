@@ -81,7 +81,7 @@ class HungerSpotCarousel extends StatelessWidget {
                                     letterSpacing: 1.0),
                               ),
                               Text(
-                                'Population: ${data[index].population}',
+                                'Population: ${data[index].needed !=0 ? data[index].needed : data[index].population}',
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.w600,

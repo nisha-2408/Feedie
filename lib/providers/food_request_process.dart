@@ -12,11 +12,12 @@ class FoodRequestProcess with ChangeNotifier {
   List<FoodRequest> datas = [];
   String name = '';
   String contact = '';
+  List<String> ids = [];
 
-  Future<void> addFoodRequest(FoodRequest data) async {
+  Future<void> addFoodRequest(
+      FoodRequest data, bool isNGO, String id, int qty) async {
     try {
-      final id =
-          await FirebaseFirestore.instance.collection('food-donation').add({
+      await FirebaseFirestore.instance.collection('food-donation').add({
         'foodName': data.foodName,
         'address': data.address,
         'foodType': data.foodType,
@@ -26,8 +27,34 @@ class FoodRequestProcess with ChangeNotifier {
         'images': data.imageUrls,
         'userId': userId,
         'status': 'Pending',
-        'toAddress': data.toAddress
+        'toAddress': data.toAddress,
+        'acceptedId': ''
       });
+      if (isNGO) {
+        if (qty - data.qty <= 0) {
+          await FirebaseFirestore.instance
+              .collection('ngo-requests')
+              .doc(id)
+              .update({'remaining': qty - data.qty, 'isFulfilled': true});
+        } else {
+          await FirebaseFirestore.instance
+              .collection('ngo-requests')
+              .doc(id)
+              .update({'remaining': qty - data.qty});
+        }
+      } else {
+        if (qty - data.qty >= 0) {
+          await FirebaseFirestore.instance
+              .collection('HungerSpots')
+              .doc(id)
+              .update({'remaining': 0, 'now': DateTime.now()});
+        } else {
+          await FirebaseFirestore.instance
+              .collection('HungerSpots')
+              .doc(id)
+              .update({'remaining': qty - data.qty});
+        }
+      }
     } catch (err) {
       throw err;
     }
@@ -38,13 +65,17 @@ class FoodRequestProcess with ChangeNotifier {
     try {
       await FirebaseFirestore.instance
           .collection('food-donation')
+          .where('status', isEqualTo: 'Pending')
           .get()
           .then((value) {
         var docs = value.docs.map((e) {
+          ids.add(e.id);
           return e.data();
         });
+        var i = 0;
         for (var ele in docs) {
           FoodRequest newData = FoodRequest(
+              id: ids[i],
               foodName: ele['foodName'],
               address: ele['address'],
               foodType: ele['foodType'],
@@ -56,6 +87,7 @@ class FoodRequestProcess with ChangeNotifier {
               status: ele['status'],
               toAddress: ele['toAddress']);
           datas.add(newData);
+          i++;
         }
       });
     } catch (err) {
@@ -98,11 +130,16 @@ class FoodRequestProcess with ChangeNotifier {
   List<FoodRequest> get requestData {
     return data;
   }
+
   List<FoodRequest> get requestDatas {
     return datas;
   }
 
-  Future<void> getUserDetails(String id) async {
+  Future<void> getUserDetails(String id, String ids) async {
+    await FirebaseFirestore.instance
+        .collection('food-donation')
+        .doc(ids)
+        .update({'status': "Accepted", 'acceptedId': userId});
     await FirebaseFirestore.instance.collection('users').doc(id).get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
@@ -114,6 +151,52 @@ class FoodRequestProcess with ChangeNotifier {
         print(e);
       },
     );
+  }
+
+  Future<void> doneRequest(String id) async {
+    await FirebaseFirestore.instance
+        .collection('food-donation')
+        .doc(id)
+        .update({'status': "Delivered"});
+  }
+
+  Future<void> getAccepted() async {
+    datas = [];
+    ids = [];
+    try {
+      await FirebaseFirestore.instance
+          .collection('food-donation')
+          .where('acceptedId', isEqualTo: userId,)
+          .get()
+          .then((value) {
+        var docs = value.docs.map((e) {
+          ids.add(e.id);
+          return e.data();
+        });
+        var i = 0;
+        for (var ele in docs) {
+          FoodRequest newData = FoodRequest(
+              id: ids[i],
+              foodName: ele['foodName'],
+              address: ele['address'],
+              foodType: ele['foodType'],
+              mealType: ele['mealType'],
+              qty: ele['qty'],
+              hrs: ele['hrs'],
+              imageUrls: ele['images'],
+              userId: ele['userId'],
+              status: ele['status'],
+              toAddress: ele['toAddress']);
+          if(newData.status != 'Delivered'){
+            datas.add(newData);
+          }
+          i++;
+        }
+      });
+    } catch (err) {
+      print(err);
+      throw err;
+    }
   }
 
   Map<String, String> get UserInfo {

@@ -47,6 +47,7 @@ class HungerSpot with ChangeNotifier {
       for (var element in docs) {
         HungerSpotData newData = new HungerSpotData(
             id: ids[i],
+            now: DateTime.now(),
             images: element['images'],
             address: element['address'],
             population: element['population'],

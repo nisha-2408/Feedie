@@ -8,13 +8,17 @@ class FoodRequest {
   String foodType;
   String mealType;
   int qty;
+  String id;
   int hrs;
+  String acceptedId;
   List<dynamic> imageUrls;
   String userId;
   String? status = 'Pending';
   String? toAddress;
   FoodRequest(
       {required this.foodName,
+      this.id = '',
+      this.acceptedId = '',
       required this.address,
       required this.foodType,
       required this.mealType,

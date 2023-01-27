@@ -2,7 +2,10 @@
 
 //import 'dart:html';
 
+import 'package:feedie/models/request.dart';
+import 'package:feedie/providers/ngo_food_request.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 //import 'package:feedie/widgets/image_input.dart';
 
 enum ProductTypeEnum { Veg, NonVeg }
@@ -18,32 +21,23 @@ class NGOFoodRequest extends StatefulWidget {
 class _NGOFoodRequestState extends State<NGOFoodRequest> {
   //final _productSizeList = ["Breakfast", "Lunch", "Snacks", "Dinner"];
   //String? _selectedVal = "Breakfast";
+
   String? valueChoose;
-  //List listItem = ["Breakfast", "Lunch", "Snacks", "Dinner"];
-  double value = 100;
-  double values = 12;
+  List listItem = ["Breakfast", "Lunch", "Dinner"];
+  double value = 50;
   DateTime? _dateTime;
-  int selected = 0;
   int select = 0;
   String? selectedValue;
-  Widget customRadio(String text, int index) {
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          selected = index;
-        });
-      },
-      child: Text(
-        text,
-        style: TextStyle(
-          color: (selected == index) ? Colors.orange : Colors.grey,
-        ),
-      ),
-      /* shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      borderSide: BorderSide(
-        color: (selected == index) ? Colors.green : Colors.blueGrey,
-      ),*/
-    );
+
+  void onSubmit() async {
+    Request data = Request(
+        date: _dateTime.toString(),
+        mealType: listItem[select - 1],
+        remaining: value.toInt(),
+        mealsRequired: value.toInt());
+    await Provider.of<NGORequest>(context, listen: false)
+        .addRequest(data)
+        .then((value) => Navigator.of(context).pop());
   }
 
   Widget customRadios(String text, int index) {
@@ -68,6 +62,7 @@ class _NGOFoodRequestState extends State<NGOFoodRequest> {
 
   @override
   Widget build(BuildContext context) {
+    int count = Provider.of<NGORequest>(context, listen: false).getCount;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Request Food"),
@@ -108,7 +103,6 @@ class _NGOFoodRequestState extends State<NGOFoodRequest> {
               onPressed: () {
                 showDatePicker(
                   context: context,
-                  
                   initialDate: DateTime.now(),
                   firstDate: DateTime(2023),
                   lastDate: DateTime(2222),
@@ -129,7 +123,7 @@ class _NGOFoodRequestState extends State<NGOFoodRequest> {
                 : "Date: ${_dateTime!.toIso8601String().split("T")[0]}"),
             SizedBox(height: 10),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: onSubmit,
               style: OutlinedButton.styleFrom(minimumSize: const Size(200, 50)),
               child: Text(
                 "Submit Form".toUpperCase(),

@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
+import 'package:feedie/models/request.dart';
+import 'package:feedie/providers/ngo_food_request.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/ngo_food_request.dart';
+import 'package:feedie/widgets/request_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +19,19 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
   var isInit = true;
   var isLoading = false;
   Map<String, dynamic> data = {};
+
   @override
   void didChangeDependencies() {
     // ignore: todo
     // TODO: implement didChangeDependencies
     if (isInit) {
+      isLoading = true;
       data = Provider.of<UserData>(context, listen: false).userData;
+      Provider.of<NGORequest>(context).fetchRequests().then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
 
       //print(data);
     }
@@ -53,6 +63,9 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int count = Provider.of<NGORequest>(context, listen: false).getCount;
+    List<Request> dataReq = Provider.of<NGORequest>(context, listen: false).unFulFill;
+    List<Request> dataFill = Provider.of<NGORequest>(context, listen: false).fulFilled;
     return Scaffold(
       appBar: AppBar(
         title: Text(data['name']),
@@ -96,7 +109,7 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
                         Container(
                           padding: EdgeInsets.fromLTRB(25.0, 40.0, 5.0, 25.0),
                           child: Text(
-                            '18',
+                            count.toString(),
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -107,7 +120,8 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
                     ),
                     SizedBox(width: 30.0),
                     GestureDetector(
-                      onTap: () => Navigator.of(context).pushNamed(NGOFoodRequest.routeName),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(NGOFoodRequest.routeName),
                       child: Container(
                         height: 60.0,
                         width: 125.0,
@@ -150,21 +164,30 @@ class _NGOHomeScreenState extends State<NGOHomeScreen> {
                 ],
               )),
           SizedBox(height: 10.0),
-          GridView.count(
-            crossAxisCount: 2,
-            primary: false,
-            crossAxisSpacing: 2.0,
-            mainAxisSpacing: 4.0,
-            shrinkWrap: true,
-            children: <Widget>[
-              _buildCard('NGO1', DateTime.now(), 1, 100),
-              _buildCard('MGO1', DateTime.now(), 2, 100),
-              _buildCard('NGO1', DateTime.now(), 3, 100),
-              _buildCard('NGO1', DateTime.now(), 4, 100),
-              _buildCard('NGO1', DateTime.now(), 5, 100),
-              _buildCard('NGO1', DateTime.now(), 6, 100),
-            ],
-          )
+          RequestCarousel(data: dataReq, isNgo: true),
+          SizedBox(height: 10.0),
+          Container(
+              padding: EdgeInsets.only(left: 25.0, right: 25.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'Fulfilled Requests',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                  Text(
+                    'See all',
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0),
+                  )
+                ],
+              )),
+          RequestCarousel(data: dataFill, isNgo: true,)
         ],
       ),
     );

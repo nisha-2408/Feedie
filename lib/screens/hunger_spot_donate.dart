@@ -26,7 +26,7 @@ class HungerSpotDonate extends StatelessWidget {
                     item: data.allHungerData[index],
                   );
                 },
-                itemCount: data.allHungerData.length,
+                itemCount: data.allHungerData.length ,
               )
             : Center(
                 child: Text("No requests as of now!"),

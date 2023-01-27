@@ -86,6 +86,7 @@ class _HungerSpotFormState extends State<HungerSpotForm> {
         images: _pickedImage,
         address: address,
         population: people,
+        now: DateTime.now(),
         hungerSpotName: selectedValue!);
     print(data);
     try {
