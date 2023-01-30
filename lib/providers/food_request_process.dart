@@ -43,16 +43,16 @@ class FoodRequestProcess with ChangeNotifier {
               .update({'remaining': qty - data.qty});
         }
       } else {
-        if (qty - data.qty >= 0) {
+        if (qty - data.qty <= 0) {
           await FirebaseFirestore.instance
               .collection('HungerSpots')
               .doc(id)
-              .update({'remaining': 0, 'now': DateTime.now()});
+              .update({'needed': 0, 'now': DateTime.now()});
         } else {
           await FirebaseFirestore.instance
               .collection('HungerSpots')
               .doc(id)
-              .update({'remaining': qty - data.qty});
+              .update({'needed': qty - data.qty});
         }
       }
     } catch (err) {
@@ -62,6 +62,7 @@ class FoodRequestProcess with ChangeNotifier {
 
   Future<void> getAllRequests() async {
     datas = [];
+    ids = [];
     try {
       await FirebaseFirestore.instance
           .collection('food-donation')
@@ -166,7 +167,10 @@ class FoodRequestProcess with ChangeNotifier {
     try {
       await FirebaseFirestore.instance
           .collection('food-donation')
-          .where('acceptedId', isEqualTo: userId,)
+          .where(
+            'acceptedId',
+            isEqualTo: userId,
+          )
           .get()
           .then((value) {
         var docs = value.docs.map((e) {
@@ -187,7 +191,7 @@ class FoodRequestProcess with ChangeNotifier {
               userId: ele['userId'],
               status: ele['status'],
               toAddress: ele['toAddress']);
-          if(newData.status != 'Delivered'){
+          if (newData.status != 'Delivered') {
             datas.add(newData);
           }
           i++;

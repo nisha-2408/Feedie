@@ -27,7 +27,7 @@ class _AllHungerSpotsState extends State<AllHungerSpots> {
       isLoading = true;
       Provider.of<HungerSpot>(
         context,
-      ).getHungerSpot().then((value) {
+      ).getAdminHungerSpot().then((value) {
         setState(() {
           isLoading = false;
         });
