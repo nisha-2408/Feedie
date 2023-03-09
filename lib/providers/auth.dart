@@ -80,6 +80,7 @@ class Auth with ChangeNotifier {
     _userId = response.user!.uid;
     //print(_userId);
     _expiryDate = DateTime.now().add(Duration(seconds: 3600));
+    print(response.additionalUserInfo!.isNewUser);
     if (response.additionalUserInfo!.isNewUser) {
       isNewUser = true;
       final no;
@@ -165,7 +166,9 @@ class Auth with ChangeNotifier {
       _expiryDate = today.add(
         Duration(seconds: 3600),
       );
+      isNewUser = false;
     } catch (error) {
+      print(error);
       throw error;
     }
     autoLogout();

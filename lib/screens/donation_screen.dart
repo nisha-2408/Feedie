@@ -83,6 +83,9 @@ class _DonationScreenState extends State<DonationScreen> {
     if (!isValid) {
       return;
     }
+    if (_pickedImage.isEmpty) {
+      return;
+    }
     _form.currentState!.save();
     FoodRequest data = FoodRequest(
         foodName: food_name,
@@ -108,7 +111,8 @@ class _DonationScreenState extends State<DonationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final toAddr = ModalRoute.of(context)!.settings.arguments as ScreenArgumnets;
+    final toAddr =
+        ModalRoute.of(context)!.settings.arguments as ScreenArgumnets;
     print(toAddr);
     return Scaffold(
       appBar: AppBar(
@@ -234,7 +238,8 @@ class _DonationScreenState extends State<DonationScreen> {
               ImageInput(_selectImage),
               SizedBox(height: 5),
               OutlinedButton(
-                onPressed: () => submitData(toAddr.address, toAddr.isNGO, toAddr.id, toAddr.qty),
+                onPressed: () => submitData(
+                    toAddr.address, toAddr.isNGO, toAddr.id, toAddr.qty),
                 style:
                     OutlinedButton.styleFrom(minimumSize: const Size(200, 50)),
                 child: Text(

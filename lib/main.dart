@@ -6,6 +6,7 @@ import 'package:feedie/providers/hunger_spot.dart';
 import 'package:feedie/providers/ngo_food_request.dart';
 import 'package:feedie/providers/user_data.dart';
 import 'package:feedie/screens/accepted_request_screen.dart';
+import 'package:feedie/screens/activity_screen.dart';
 import 'package:feedie/screens/admin_screen.dart';
 import 'package:feedie/screens/all_hunger_spots.dart';
 import 'package:feedie/screens/choose_role_screen.dart';
@@ -127,7 +128,8 @@ class _MyAppState extends State<MyApp> {
               DonationScreen.routeName: (context) => DonationScreen(),
               NGOFoodRequest.routeName: (context) => NGOFoodRequest(),
               NGODonate.routeName:(context) => NGODonate(),
-              FoodAcepted.routeName:(context) => FoodAcepted()
+              FoodAcepted.routeName:(context) => FoodAcepted(),
+              ActivityScreen.routeName:(context) => ActivityScreen()
             },
           ),
         ));

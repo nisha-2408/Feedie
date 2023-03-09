@@ -2,6 +2,7 @@
 
 import 'package:feedie/screens/hunger_spot_donate.dart';
 import 'package:feedie/screens/hunger_spot_map_screen.dart';
+import 'package:feedie/screens/ngo_donate_screen.dart';
 import 'package:flutter/material.dart';
 
 class DonateToSceen extends StatelessWidget {
@@ -48,7 +49,7 @@ class DonateToSceen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(HungerSpotMap.routeName);
+                      Navigator.of(context).pushNamed(NGODonate.routeName);
                     },
                     child: Text('Donate'),
                   )

@@ -58,7 +58,7 @@ class _HomeWelcomeState extends State<HomeWelcome> {
             onPressed: () {
               Navigator.of(context).pushNamed(FoodAcepted.routeName);
             },
-            icon: Icon(Icons.notifications_on_outlined),
+            icon: Icon(Icons.done_all_rounded),
             color: Colors.black,
             iconSize: 28,
           )

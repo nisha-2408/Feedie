@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:feedie/providers/auth.dart';
 import 'package:feedie/providers/user_data.dart';
+import 'package:feedie/screens/activity_screen.dart';
 import 'package:feedie/widgets/edit_address.dart';
 import 'package:feedie/widgets/edit_details.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -371,12 +372,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             SizedBox(
                               width: 25,
                             ),
-                            Text(
-                              'Donations',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 62, 62, 62),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamed(ActivityScreen.routeName),
+                              child: Text(
+                                'Donations',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color.fromARGB(255, 62, 62, 62),
+                                ),
                               ),
                             ),
                           ],
@@ -385,44 +389,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(
                       height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: Color.fromARGB(255, 224, 224, 224)),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 194, 194, 194),
-                                  offset: Offset(0, 10),
-                                  spreadRadius: 5,
-                                  blurRadius: 20)
-                            ]),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.notifications_active_rounded,
-                              color: Colors.blue,
-                              size: 40,
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            Text(
-                              'Notifications',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromARGB(255, 62, 62, 62),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                     SizedBox(
                       height: 15,

@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_NOT_FOUND')) {
         errorMessage = 'Could not find a user with that email.';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
+      } else if (error.toString().contains('wrong-password')) {
         errorMessage = 'Invalid password.';
       }
       _showErrorDialog(errorMessage);
@@ -94,8 +94,14 @@ class _LoginScreenState extends State<LoginScreen> {
         isLoading = false;
       });
       print(error);
-      const errorMessage =
-          "Could not authenticate you. Please try again later.";
+      var errorMessage;
+      if (error.toString().contains("wrong-password")) {
+        errorMessage = 'Invalid password.';
+      } else if(error.toString().contains("user-not-found")){
+        errorMessage = 'Could not find a user with that email.';
+      } else {
+        errorMessage = "Could not authenticate you!! Try again later :(";
+      }
       _showErrorDialog(errorMessage);
     }
     _form.currentState!.reset();

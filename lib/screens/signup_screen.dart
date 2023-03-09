@@ -63,7 +63,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           isLoading = false;
         });
-        Navigator.of(context).pushReplacementNamed('/home');
+        // ignore: unrelated_type_equality_checks
+        //Navigator.popUntil(context, ModalRoute.withName('/'));
+        Navigator.of(context).pop();
       });
     } on HttpException catch (error) {
       setState(() {
@@ -85,8 +87,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         isLoading = false;
       });
       isError = true;
-      const errorMessage =
-          "Could not authenticate you. Please try again later.";
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('email-already-in-use')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This is not a valid email address';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'This password is too weak.';
+      }
       _showErrorDialog(errorMessage);
     }
     if (!isError) {
